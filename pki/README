@@ -1,0 +1,21 @@
+CLIENT_ID=mzone-xxxxxxxx
+alias mosquitto_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key '
+alias mosquitto_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key '
+
+mosquitto_sub -t $CLIENT_ID/+
+
+mosquitto_pub -t $CLIENT_ID/zone1 -m ping
+mosquitto_pub -t $CLIENT_ID/zone2 -m ping
+mosquitto_pub -t $CLIENT_ID/zone3 -m ping
+mosquitto_pub -t $CLIENT_ID/zone4 -m ping
+mosquitto_pub -t $CLIENT_ID/zone0 -m ping
+
+mosquitto_pub -t $CLIENT_ID/zone2 -m PolarFire
+
+mosquitto_pub -t $CLIENT_ID/hart1 -f apps/hart1/hart1.bin
+mosquitto_pub -t $CLIENT_ID/zone0 -m ping
+mosquitto_pub -t $CLIENT_ID/zone0 -m Microchip
+
+mosquitto_pub -t $CLIENT_ID/hart2 -f apps/hart2/hart2.bin
+mosquitto_pub -t $CLIENT_ID/zone0 -m ping
+mosquitto_pub -t $CLIENT_ID/zone0 -m Microchip

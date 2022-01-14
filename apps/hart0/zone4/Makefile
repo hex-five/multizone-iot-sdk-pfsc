@@ -1,0 +1,15 @@
+# Copyright(C) 2020 Hex Five Security, Inc. - All Rights Reserved
+
+TARGET = zone4.elf
+
+BSP_DIR := ../bsp
+NEWLIB_DIR := $(BSP_DIR)/newlib
+
+LINKER_SCRIPT := ./linker.ld
+
+C_SRCS += ./main.c
+
+INCLUDES += -I ../../../ext/multizone
+
+include $(NEWLIB_DIR)/newlib.mk
+
