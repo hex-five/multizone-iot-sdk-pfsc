@@ -1,7 +1,6 @@
 .~lock.memory.ods#
-/ext/icicle-kit-es/soc_config/
-/bootmode*
-/apps/hart0/zone1/zone1.hex
+ext/icicle-kit-es/soc_config/
+bootmode*
 *.o
 *.lst
 *.siz
@@ -10,4 +9,5 @@
 *.bin
 *.elf
 *.tmp
+!apps/hart0/zone1/zone1.hex
 
