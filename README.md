@@ -92,6 +92,44 @@ build and load to flash for production (boot mode 1):
 ```
 make load-rom
 ```
+### Optional: Eclipse CDT Project ###
+
+This repository includes a complete Eclipse CDT project for developers familiar with Eclipse. No additional plugins are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended. The project can be used with any Eclipse CDT installation including Microchip SoftConsole. If used with Microchip SoftConsole, it is strongly recommended to open the Multizone project in a new separate workspace.   
+
+**Eclipse project Setup**
+
+Optional: Install a fresh copy of [Eclipse CDT 10.5.0 for Eclipse 2021-12](https://www.eclipse.org/cdt/downloads.php):
+
+Optional: install the OpenOCD debugging plugin
+```
+Help > Install new software > Add > Name : Embedded C/C++ v6.x Updates
+Help > Install new software > Add > Location : https://download.eclipse.org/embed-cdt/updates/v6/
+Help > Install new software : Embedded C/C++ OpenOCD Debugging
+```
+Import the MultiZone Trusted Firmware project
+```
+Files > Open project from file system > Import source : multizone-iot-sdk-pfsc
+files > Open project from file system > Search for nested projects : deselect
+files > Open project from file system > Finish
+```
+Configure Microchip dependencies FPGENPROG and SC_INSTALL_DIR according to your installation
+```
+Project > properties > C/C++ > Build > Environment
+FPGENPROG ${HOME}/microsemi/Program_Debug_v2021.3/Program_Debug_Tool/bin64/fpgenprog
+SC_INSTALL_DIR ${HOME}/Microchip/SoftConsole-v2021.3-7.0.0.599
+```
+Build and load to ram (debug) or rom (production)
+```
+Build Tragets > all
+Build Tragets > load-ram
+Build Tragets > load-rom
+```
+Debug:
+```
+Run > Debug configurations > multizone-iot-sdk-pfsc > Debug
+```
+![alt text](https://hex-five.com/wp-content/uploads/multizone-eclipse-proj.png)
+
 
 
 
