@@ -29,12 +29,33 @@ Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](h
 
 Program the Icicle board: FPExpress > project > new job proj > import > job file : MPFS_ICICLE_KIT_BASE_DESIGN.job > run
 
-Skip the SDK instructions below and go directly to [run the Trusted Firmware](#run-the-trusted-firmware)
+Skip the SDK instructions below and go directly to [run the MultiZone Trusted Firmware](#run-multizone-trusted-firmware)
 
 
 ### Installation ###
 
-TBC ...
+This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11.2.0 and Ubuntu 20.04.3 LTS. Other Linux distros are similar. Windows developers may want to install a Linux emulation environment like MYSYS2/MinGW64 or Windows Subsystem for Linux. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
+
+**Linux prerequisites**
+
+```
+sudo apt update
+sudo apt install git build-essential default-jre gtkterm mosquitto-clients    
+```
+
+_Note_: the package gtkterm is optional and required only to connect to the reference application via a local terminal. It is not required to build, debug, and load the MultiZone Firmware or to connect to the target via Ethernet. Any other serial terminal application of choice would do.
+
+_Note_: the package mosquitto-clients is optional and required only to test MQTT funcionality including telemetry and remote firmware updates. It is not required to build, debug, and load MultiZone Firmware or to connect to the target via Ethernet. Any other MQTT client application of choice would do.
+
+**Microchip prerequisites**
+
+- [Microchip FlashPro Software (fpgenprog)](https://www.microsemi.com/product-directory/programming-and-debug/4977-flashpro)
+
+_Note_: Microchip FlashPro Software is optional and only required to boot MultiZone Firmware from the Icicle eNVM flash memory. It is not required to build, load, debug, and run the firmware in ram. Alternatively, the FPExpress software can be downloaded as part of Microchip Libero SoC suite. 
+
+- [Microchip SoftConsole (RISC-V Toolchain and OpenOCD)](https://www.microsemi.com/product-directory/design-tools/4879-softconsole#downloads)
+
+_Note_: the SoftConsole software is neededed only to provide the RISC-V Toolchain and the OpenOCD folders. It is not required to build, load, debug, and run the MultiZone Firmware. Alternatively, you can build and debug MultiZone Firmware from the command line with Makefile and GDB or you can use your own Eclipse installation with the Eclipse CDT project incuded in this repo - see section below.   
 
 
 ### Legalities ###
