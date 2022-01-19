@@ -34,18 +34,25 @@ Skip the SDK instructions below and go directly to [run the MultiZone Trusted Fi
 
 ### Installation ###
 
-This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11.2.0 and Ubuntu 20.04.3 LTS. Other Linux distros are similar. Windows developers may want to install a Linux emulation environment like MYSYS2/MinGW64 or Windows Subsystem for Linux. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
+This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11.2.0 and Ubuntu 20.04.3 LTS. Other Linux distros are similar. Windows developers may want to install Windows Subsystem for Linux or a Linux emulation environment like MYSYS2/MinGW64. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
 
 **Linux prerequisites**
 
 ```
 sudo apt update
-sudo apt install git build-essential default-jre gtkterm mosquitto-clients    
+sudo apt install git build-essential default-jre gtkterm mosquitto-clients
 ```
-
 _Note_: the package gtkterm is optional and required only to connect to the reference application via a local terminal. It is not required to build, debug, and load the MultiZone Firmware or to connect to the target via Ethernet. Any other serial terminal application of choice would do.
 
 _Note_: the package mosquitto-clients is optional and required only to test MQTT funcionality including telemetry and remote firmware updates. It is not required to build, debug, and load MultiZone Firmware or to connect to the target via Ethernet. Any other MQTT client application of choice would do.
+
+Add the three lines below to /etc/udev/rules.d/99.rules to access the Icicle serial port over USB.
+```
+# Microsemi PolarFire SoC Icicle - UART J11 - ID 10c4:ea71 Cygnal Integrated Products, Inc.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4",ATTRS{idProduct}=="ea71", MODE="664", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTR{idVendor} =="10c4",ATTR{idProduct} =="ea71", MODE="664", GROUP="plugdev"
+```
+Reboot or run ```sudo udevadm trigger```
 
 **Microchip prerequisites**
 
@@ -56,6 +63,36 @@ _Note_: Microchip FlashPro Software is optional and only required to boot MultiZ
 - [Microchip SoftConsole (RISC-V Toolchain and OpenOCD)](https://www.microsemi.com/product-directory/design-tools/4879-softconsole#downloads)
 
 _Note_: the SoftConsole software is neededed only to provide the RISC-V Toolchain and the OpenOCD folders. It is not required to build, load, debug, and run the MultiZone Firmware. Alternatively, you can build and debug MultiZone Firmware from the command line with Makefile and GDB or you can use your own Eclipse installation with the Eclipse CDT project incuded in this repo - see section below.   
+
+**MultiZone Trusted Firmware**
+
+```
+git clone --recursive https://github.com/hex-five/multizone-iot-sdk-pfsc.git
+cd multizone-iot-sdk-pfsc
+git apply -p1 ext/bare-metal-lib.patch --directory=ext/bare-metal-lib
+```
+_Note_: Microchip submodule errors "fatal: No url found for submodule path ..." and "Failed to recurse into submodule path ..." can be safely ignored as they have no effect on MultiZone Firmware.
+
+```
+export SC_INSTALL_DIR=~/Microchip/SoftConsole-v2021.3-7.0.0.599
+export FPGENPROG=~/microsemi/Program_Debug_v2021.3/Program_Debug_Tool/bin64/fpgenprog
+export RISCV=$SC_INSTALL_DIR/riscv-unknown-elf-gcc
+export OPENOCD=$SC_INSTALL_DIR/openocd
+```
+_Note_: change SC_INSTALL_DIR and FPGENPROG according to your installation.
+
+```
+make
+```
+build and load to ram for debug (boot mode 0):
+```
+make load-ram
+```
+build and load to flash for production (boot mode 1):
+```
+make load-rom
+```
+
 
 
 ### Legalities ###
