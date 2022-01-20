@@ -128,9 +128,13 @@ Z2 >
 Commands: yield send recv pmp load store exec stats timer restart dma
 ```
 observe Zone 3 heartbeat LED2 (red)
+
 press SW2 to toggle LED4 (yellow)
+
 press SW3 to toggle LED3 (yellow)
-observe the relative messages sent by Zone 3 to Zone 2
+
+observe the messages sent by Zone 3 to Zone 2
+
 ```
 Z3 > IRQ SW3
 
@@ -143,6 +147,32 @@ Z2 > send 3 ping
 Z3 > pong
 ```
 For a detailed explanation of all the features of the MultiZone Reference Application see [MultiZone Security Reference Manual](https://github.com/hex-five/multizone-iot-sdk-pfsc/tree/master/ext/multizone/manual.pdf)
+
+##TLS/MQTT Remote Access##
+
+Connect the Ethernet port J2 to an Internet router, or to your computer if Internet sharing is enabled - see https://help.ubuntu.com/community/Internet/ConnectionSharing. The router should provide DHCP configuration including one DNS servers. There is no need to open inbound ports for the MQTT client to work. If your local network blocks outbound connections to the default MQTT/TLS port 8883, you can reconfigure the client to use the HTTPS/TLS port 443, which is usually open - see MQTT configuration file [mqtt_config.h](https://github.com/hex-five/multizone-iot-sdk-pfsc/blob/master/apps/hart0/zone1/mqtt_config.h)  
+
+After a few seconds the client should connect to Hex Five's public MQTT broker:
+```
+Z1 > netif_link_callback: up
+ 
+Z1 > netif_status_callback: address 192.168.0.181
+ 
+Z1 > dns_callback: mqtt-broker.hex-five.com 54.176.2.35
+ 
+Z1 > sntp_process: 01/20/2021 00:54:53 GMT
+ 
+Z1 > rand: 0x265971a9
+ 
+Z1 > client_id: mzone-3a237d20
+ 
+Z1 > mqtt: connecting ...
+ 
+Z1 > TLSv1.2: ECDHE-ECDSA-AES128-GCM-SHA256 prime256v1
+ 
+Z1 > mqtt: connected
+```
+Take note of your randomly generated client_id as you'll need it to interact with the target via MQTT messages published and subscribed to topics mzone-xxxxxxxx/zonex (mzone-3a237d20 in the example above). The MQTT client_id is generated randomly for each new MQTT session upon board reset.
 
 
 ### Optional: Eclipse CDT Project ###
