@@ -25,11 +25,13 @@ This repository is for the Microchip Icicle Kit board [reference design 2021.02]
 
 Download and install [Microchip flash programmer software FPExpress](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
 
-Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.2/.zip) 
+Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.2/.zip)
+
+Connect the power adapter to J29 and a micro USB cable to J33. Turn on switch SW6. 
 
 Program the Icicle board: FPExpress > project > new job proj > import > job file : MPFS_ICICLE_KIT_BASE_DESIGN.job > run
 
-Skip the SDK instructions below and go directly to [run the MultiZone Trusted Firmware](#run-multizone-trusted-firmware)
+Skip the installation instructions below and go directly to [MultiZone reference application](#multizone-reference-application)
 
 
 ### Installation ###
@@ -62,9 +64,9 @@ _Note_: Microchip FlashPro Software is optional and only required to boot MultiZ
 
 - [Microchip SoftConsole (RISC-V Toolchain and OpenOCD)](https://www.microsemi.com/product-directory/design-tools/4879-softconsole#downloads)
 
-_Note_: the SoftConsole software is neededed only to provide the RISC-V Toolchain and the OpenOCD folders. It is not required to build, load, debug, and run the MultiZone Firmware. Alternatively, you can build and debug MultiZone Firmware from the command line with Makefile and GDB or you can use your own Eclipse installation with the Eclipse CDT project incuded in this repo - see section below.   
+_Note_: the SoftConsole software is neededed only to provide the RISC-V Toolchain and the OpenOCD folders. It is not required to build, load, debug, and run the MultiZone Firmware. Alternatively, you can build and debug MultiZone Firmware from the command line with Makefile and GDB or you can use your own Eclipse installation with the Eclipse CDT project incuded in this repo - see [Eclipse CDT Project](#optional-eclipse-cdt-project).   
 
-**MultiZone Trusted Firmware**
+**Trusted Firmware SDK**
 
 ```
 git clone --recursive https://github.com/hex-five/multizone-iot-sdk-pfsc.git
@@ -92,6 +94,57 @@ build and load to flash for production (boot mode 1):
 ```
 make load-rom
 ```
+### MultiZone Reference application ###
+
+Make sure you have access to the Icicle kit USB port - see [Linux prerequisites](#linux-prerequisites).  
+Connect the Icicle Kit micro USB J11 to your computer.
+On your computer, start a serial terminal console (GtkTerm) and connect to /dev/ttyUSB0 at 115200-8-N-1
+Hit the enter key a few times until the cursor 'Z2 >' appears on the screen
+```
+===================================================================
+                    MultiZone® Trusted Firmware                    
+             Patents US 11,151,262 and PCT/US2019/03877            
+   Copyright© 2022 Hex Five Security, Inc. - All Rights Reserved   
+===================================================================
+This version of MultiZone® Trusted Firmware is meant for evaluation
+purposes only. As such, use of this software is governed by the    
+Evaluation License. There may be other functional limitations as   
+described in the evaluation SDK documentation. The commercial      
+version of the software does not have these restrictions.          
+===================================================================
+Machine ISA   : 0x00101105 RV64 ACIMU
+Vendor        : 0x00000000
+Architecture  : 0x00000000
+Implementation: 0x00000000
+Hart id       : 0x0
+CPU clock     : 600 MHz
+RTC clock     : 1 MHz
+
+PLIC @0x0c000000
+DMAC @0x20009000
+GPIO @0x20122000
+
+Z2 >
+Commands: yield send recv pmp load store exec stats timer restart dma
+```
+observe Zone 3 heartbeat LED2 (red)
+press SW2 to toggle LED4 (yellow)
+press SW3 to toggle LED3 (yellow)
+observe the relative messages sent by Zone 3 to Zone 2
+```
+Z3 > IRQ SW3
+
+Z3 > IRQ SW2
+```
+send a ping to Zone 3 and observe the reply
+```
+Z2 > send 3 ping
+
+Z3 > pong
+```
+For a detailed explanation of all the features of the MultiZone Reference Application see [MultiZone Security Reference Manual](https://github.com/hex-five/multizone-iot-sdk-pfsc/tree/master/ext/multizone/manual.pdf)
+
+
 ### Optional: Eclipse CDT Project ###
 
 This repository includes a complete Eclipse CDT project for developers familiar with Eclipse. No additional plugins are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended. The project can be used with any Eclipse CDT installation including Microchip SoftConsole. If used with Microchip SoftConsole, it is strongly recommended to open the Multizone project in a new separate workspace.   
