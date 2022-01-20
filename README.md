@@ -1,43 +1,42 @@
 # multizone-iot-sdk-pfsc
 
-MultiZone® Trusted Firmware is the quick and safe way to build secure IoT applications with any RISC-V processor. It provides secure access to commercial and private IoT clouds, remote firmware updates, and telemetry. The built-in Trusted Execution Environment provides hardware-enforced separation to shield the execution of trusted applications from untrusted 3rd party libraries.
+MultiZone® Trusted Firmware is the quick and safe way to build secure embedded applications with any RISC-V processor. It provides secure access to commercial and private clouds, remote firmware updates, and telemetry. The built-in Trusted Execution Environment provides hardware-enforced separation to shield the execution of trusted applications from untrusted 3rd party libraries.
 
 Complete firmware stack optimized for RISC-V processors:
 
-- Provides secure access to any IoT clouds, secure boot, remote firmware updates, etc.
-- Works with any RISC-V processor: no need for proprietary TrustZone-like hardware
+- Provides secure access to any IoT clouds, secure boot, remote firmware updates, telemetry, etc.
+- Works with any RISC-V processor: no need for proprietary crypto hardware
 - Rapid development: pre-integrated TEE, TCP/IP, TLS/ECC, MQTT, FreeRTOS, GCC, Eclipse
 - Built-in Trusted Execution Environment providing multiple separated runtime domains
 - Commercial open source license: no GPL contamination, no royalties, free evaluation
 
 The MultiZone® IoT Firmware works with any 32-bit and 64-bit RISC-V processor with standard U-mode extension. For a quick start, we recommend the development kit based on the open source softcore X300 developed by Hex Five Security. It is an enhanced version of the E300 SoC (Rocket rv32) originally developed at U.C. Berkeley. Like the E300, the X300 is designed to be programmed onto a Xilinx Artix-7. The X300 bitstream is entirely free for commercial and non-commercial use.
 
-This version of the MultiZone Secure IoT Firmware supports the following hardware development kits:
+This version of the MultiZone Secure IoT Firmware works with the following development boards:
 
 - [Xilinx Artix-7 Arty FPGA Evaluation Kit](https://www.xilinx.com/products/boards-and-kits/arty.html)
 
 - [Microchip PolarFire SoC FPGA Icicle Kit](https://www.microsemi.com/existing-parts/parts/152514)
-
 
 This repository is for the Microchip Icicle Kit board [reference design 2021.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.02)
 
 
 ### Quick Start ###
 
-Download and install [Microchip flash programmer software FPExpress](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
+Download and install [Microsemi Flash Programmer](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
 
 Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.2/.zip)
 
 Connect the power adapter to J29 and a micro USB cable to J33. Turn on switch SW6. 
 
-Program the Icicle board: FPExpress > project > new job proj > import > job file : MPFS_ICICLE_KIT_BASE_DESIGN.job > run
+Program the Icicle board: FPExpress > Project > New job proj > Import > Job file : MPFS_ICICLE_KIT_BASE_DESIGN.job > Run
 
-Skip the installation instructions below and go directly to [MultiZone reference application](#multizone-reference-application)
+Skip the installation instructions below and go directly to [MultiZone Reference Application](#multizone-reference-application)
 
 
 ### Installation ###
 
-This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11.2.0 and Ubuntu 20.04.3 LTS. Other Linux distros are similar. Windows developers may want to install Windows Subsystem for Linux or a Linux emulation environment like MYSYS2/MinGW64. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
+This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11.2 and Ubuntu 20.04. Other Linux distros are similar. Windows developers may want to install Windows Subsystem for Linux or a Linux emulation environment like MYSYS2/MinGW64. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
 
 **Linux prerequisites**
 
@@ -47,7 +46,7 @@ sudo apt install git build-essential default-jre gtkterm mosquitto-clients
 ```
 _Note_: the package gtkterm is optional and required only to connect to the reference application via a local terminal. It is not required to build, debug, and load the MultiZone Firmware or to connect to the target via Ethernet. Any other serial terminal application of choice would do.
 
-_Note_: the package mosquitto-clients is optional and required only to test MQTT funcionality including telemetry and remote firmware updates. It is not required to build, debug, and load MultiZone Firmware or to connect to the target via Ethernet. Any other MQTT client application of choice would do.
+_Note_: the package mosquitto-clients is optional and required only to test MQTT funcionality including telemetry and remote firmware updates. It is not required to build, debug, and load MultiZone Firmware or to connect to the target via local terminal. Any other MQTT client application of choice would do.
 
 <a name="udev-rules"></a>Add the three lines below to /etc/udev/rules.d/99.rules to access the Icicle serial port over USB.
 ```
@@ -59,7 +58,7 @@ Reboot or run ```sudo udevadm trigger```
 
 **Microchip prerequisites**
 
-- [Microchip FlashPro Software (fpgenprog)](https://www.microsemi.com/product-directory/programming-and-debug/4977-flashpro)
+- [Microsemi Flash Programmer](https://www.microsemi.com/product-directory/programming-and-debug/4977-flashpro)
 
 _Note_: Microchip FlashPro Software is optional and only required to boot MultiZone Firmware from the Icicle eNVM flash memory. It is not required to build, load, debug, and run the firmware in ram. Alternatively, the FPExpress software can be downloaded as part of Microchip Libero SoC suite. 
 
@@ -107,7 +106,7 @@ Connect the Icicle Kit micro USB J11 to your computer.
 
 On your computer, start a serial terminal console (GtkTerm) and connect to /dev/ttyUSB0 at 115200-8-N-1
 
-Hit the enter key a few times until the cursor 'Z2 >' appears on the screen:
+Hit enter a few times until the cursor 'Z2 >' appears on the screen:
 
 ```
 ===================================================================
@@ -157,7 +156,7 @@ Z3 > pong
 ```
 For a detailed explanation of all the features of the MultiZone Reference Application see [MultiZone Security Reference Manual](https://github.com/hex-five/multizone-iot-sdk-pfsc/tree/master/ext/multizone/manual.pdf)
 
-**Remote Access via Mutually Authenticated TLS/MQTT**
+**Secure Remote Access via Mutually Authenticated TLS/MQTT**
 
 Connect the Ethernet port J2 to an Internet router, or to your computer if Internet sharing is enabled - see https://help.ubuntu.com/community/Internet/ConnectionSharing. The router should provide DHCP configuration including one DNS servers. There is no need to open inbound ports for the MQTT client to work. If your local network blocks outbound connections to the default MQTT/TLS port 8883, you can reconfigure the client to use the HTTPS/TLS port 443, which is usually open - see MQTT configuration file [mqtt_config.h](https://github.com/hex-five/multizone-iot-sdk-pfsc/blob/master/apps/hart0/zone1/mqtt_config.h)  
 
@@ -181,25 +180,24 @@ Z1 > TLSv1.2: ECDHE-ECDSA-AES128-GCM-SHA256 prime256v1
  
 Z1 > mqtt: connected
 ```
-Take note of your randomly generated client_id as you'll need it to interact with the target via MQTT messages published and subscribed to topics mzone-xxxxxxxx/zonex (mzone-3a237d20 in the example above). The MQTT client_id is generated randomly for each new MQTT session upon board reset. At any time, you can restart the TLS/MQTT session and receive a new client id with the command ```send 1 restart```.
+Take note of your randomly generated ```client_id``` as you'll need it to interact with the target via MQTT messages published and subscribed to topics mzone-xxxxxxxx/zonex (mzone-3a237d20 in the example above). The MQTT client_id is generated randomly for each MQTT session upon board reset. At any time, you can restart the TLS/MQTT session and receive a new client id with the command ```send 1 restart```.
 
-**Telemetry - Send and receive encrypted TLS/MQTT messages**
+**Telemetry - Send and Receive Encrypted TLS/MQTT Messages**
 
-In the following examples replace "mzone-xxxxxxxx" with your randomly generated client id.
+In the following examples replace ```mzone-xxxxxxxx``` with your randomly generated client id.
 
 In a new terminal console, subscribe (listen) to all topics for your device:
 ```
 cd multizone-iot-sdk-pfsc
 CLIENT_ID=mzone-xxxxxxxx
-alias mosquitto_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key '
+alias mosquitto_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
 mosquitto_sub -t $CLIENT_ID/+
 ```
-
 In a new terminal console, publish (send) MQTT messages to the topics mapped to zones:
 ```
 cd multizone-iot-sdk-pfsc
 CLIENT_ID=mzone-xxxxxxxx
-alias mosquitto_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key '
+alias mosquitto_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
 
 mosquitto_pub -t $CLIENT_ID/zone1 -m ping
 mosquitto_pub -t $CLIENT_ID/zone2 -m ping
@@ -208,7 +206,7 @@ mosquitto_pub -t $CLIENT_ID/zone4 -m ping
 mosquitto_pub -t $CLIENT_ID/zone2 -m MultiZone
 ```
 
-**Remote Firmware Updates**
+**Encrypted Remote Firmware Updates**
 
 Remotely deploy new firmware to hart #1:
 
@@ -240,13 +238,12 @@ Z1 > Microchip
 
 H1 > 
 ```
-
 Optional: repeat with hart #2 (/dev/ttyUSB2), hart #3 (/dev/ttyUSB3), and hart #4.
 
 
 ### Optional: Eclipse CDT Project ###
 
-This repository includes a complete Eclipse CDT project for developers familiar with Eclipse. No additional plugins are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended. The project can be used with any Eclipse CDT installation including Microchip SoftConsole. If used with Microchip SoftConsole, it is strongly recommended to open the Multizone project in a new separate workspace.   
+This repository includes a complete Eclipse CDT project for developers familiar with the Eclipse IDE. No additional plugins or 3rd party components are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended to debug over OpenOCD/JTAG. The project can be used with any Eclipse CDT installation including Microchip SoftConsole. If used with Microchip SoftConsole, it is strongly recommended to open the Multizone project in a new separate workspace.   
 
 **Eclipse project Setup**
 
