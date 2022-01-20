@@ -25,7 +25,7 @@ This repository is for the Microchip Icicle Kit board [reference design 2021.02]
 
 Download and install [Microsemi Flash Programmer](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
 
-Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.2/.zip)
+Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.2/Icicle-Kit-2021.02-Trusted-Firmware.zip)
 
 Connect the power adapter to J29 and a micro USB cable to J33. Turn on switch SW6. 
 
