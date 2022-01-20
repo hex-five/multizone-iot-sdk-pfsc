@@ -96,10 +96,16 @@ make load-rom
 ```
 ### MultiZone Reference application ###
 
-Make sure you have access to the Icicle kit USB port - see [Linux prerequisites](#linux-prerequisites).  
+**Local Access via UART**
+
+Make sure you have access to the Icicle kit USB port - see [Linux prerequisites](#linux-prerequisites)
+
 Connect the Icicle Kit micro USB J11 to your computer.
+
 On your computer, start a serial terminal console (GtkTerm) and connect to /dev/ttyUSB0 at 115200-8-N-1
-Hit the enter key a few times until the cursor 'Z2 >' appears on the screen
+
+Hit the enter key a few times until the cursor 'Z2 >' appears on the screen:
+
 ```
 ===================================================================
                     MultiZone® Trusted Firmware                    
@@ -148,7 +154,7 @@ Z3 > pong
 ```
 For a detailed explanation of all the features of the MultiZone Reference Application see [MultiZone Security Reference Manual](https://github.com/hex-five/multizone-iot-sdk-pfsc/tree/master/ext/multizone/manual.pdf)
 
-##TLS/MQTT Remote Access##
+**Remote Access via Mutually Authenticated TLS/MQTT**
 
 Connect the Ethernet port J2 to an Internet router, or to your computer if Internet sharing is enabled - see https://help.ubuntu.com/community/Internet/ConnectionSharing. The router should provide DHCP configuration including one DNS servers. There is no need to open inbound ports for the MQTT client to work. If your local network blocks outbound connections to the default MQTT/TLS port 8883, you can reconfigure the client to use the HTTPS/TLS port 443, which is usually open - see MQTT configuration file [mqtt_config.h](https://github.com/hex-five/multizone-iot-sdk-pfsc/blob/master/apps/hart0/zone1/mqtt_config.h)  
 
@@ -172,8 +178,48 @@ Z1 > TLSv1.2: ECDHE-ECDSA-AES128-GCM-SHA256 prime256v1
  
 Z1 > mqtt: connected
 ```
-Take note of your randomly generated client_id as you'll need it to interact with the target via MQTT messages published and subscribed to topics mzone-xxxxxxxx/zonex (mzone-3a237d20 in the example above). The MQTT client_id is generated randomly for each new MQTT session upon board reset.
+Take note of your randomly generated client_id as you'll need it to interact with the target via MQTT messages published and subscribed to topics mzone-xxxxxxxx/zonex (mzone-3a237d20 in the example above). The MQTT client_id is generated randomly for each new MQTT session upon board reset. At any time, you can restart the TLS/MQTT session and receive a new client id with the command ```send 1 restart```.
 
+**Telemetry - Send and receive encrypted TLS/MQTT messages**
+
+In the following examples replace "mzone-xxxxxxxx" with your randomly generated client id.
+
+In a new terminal console, subscribe (listen) to all topics for your device:
+```
+cd multizone-iot-sdk-pfsc
+CLIENT_ID=mzone-xxxxxxxx
+alias mosquitto_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key '
+mosquitto_sub -t $CLIENT_ID/+
+```
+
+In a new terminal console, publish (send) MQTT messages to the topics mapped to zones:
+```
+cd multizone-iot-sdk-pfsc
+CLIENT_ID=mzone-xxxxxxxx
+alias mosquitto_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key '
+
+mosquitto_pub -t $CLIENT_ID/zone1 -m ping
+mosquitto_pub -t $CLIENT_ID/zone2 -m ping
+mosquitto_pub -t $CLIENT_ID/zone3 -m ping
+mosquitto_pub -t $CLIENT_ID/zone4 -m ping
+mosquitto_pub -t $CLIENT_ID/zone2 -m MultiZone
+```
+**Remote Firmware Updates**
+
+Remotely deploy new firmware to hart #1:
+
+```
+mosquitto_pub -t $CLIENT_ID/hart1 -f apps/hart1/hart1.bin
+```
+
+On your computer, start a serial terminal console (GtkTerm) and connect to /dev/ttyUSB1 at 115200-8-N-1.
+```
+mosquitto_pub -t $CLIENT_ID/zone0 -m ping
+mosquitto_pub -t $CLIENT_ID/zone0 -m Microchip
+```
+Observe the newly deployed application running on hart #1 and connected to the local UART /dev/ttyUSB1.
+
+Optional: repeat with hart #2 (/dev/ttyUSB2), etc.
 
 ### Optional: Eclipse CDT Project ###
 
@@ -214,7 +260,9 @@ Run > Debug configurations > multizone-iot-sdk-pfsc > Debug
 ![alt text](https://hex-five.com/wp-content/uploads/multizone-eclipse-proj.png)
 
 
+### Technical Specs ###
 
+TBC ...
 
 ### Legalities ###
 
