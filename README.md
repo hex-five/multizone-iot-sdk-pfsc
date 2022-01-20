@@ -217,9 +217,27 @@ On your computer, start a serial terminal console (GtkTerm) and connect to /dev/
 mosquitto_pub -t $CLIENT_ID/zone0 -m ping
 mosquitto_pub -t $CLIENT_ID/zone0 -m Microchip
 ```
-Observe the newly deployed application running on hart #1 and connected to the local UART /dev/ttyUSB1.
+Observe the newly deployed firmware running on hart #1 (Zone 0) and connected to the local UART /dev/ttyUSB1
 
-Optional: repeat with hart #2 (/dev/ttyUSB2), etc.
+```
+===================================================================
+                    MultiZone® Trusted Firmware                    
+             Patents US 11,151,262 and PCT/US2019/03877            
+   Copyright© 2022 Hex Five Security, Inc. - All Rights Reserved   
+===================================================================
+This version of MultiZone® Trusted Firmware is meant for evaluation
+purposes only. As such, use of this software is governed by the    
+Evaluation License. There may be other functional limitations as   
+described in the evaluation SDK documentation. The commercial      
+version of the software does not have these restrictions.          
+===================================================================
+
+Z1 > Microchip
+
+H1 > 
+```
+
+Optional: repeat with hart #2 (/dev/ttyUSB2), hart #3 (/dev/ttyUSB3), and hart #4.
 
 ### Optional: Eclipse CDT Project ###
 
