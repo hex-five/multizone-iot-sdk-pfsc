@@ -21,6 +21,7 @@ This version of the MultiZone Secure IoT Firmware supports the following hardwar
 
 This repository is for the Microchip Icicle Kit board [reference design 2021.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.02)
 
+
 ### Quick Start ###
 
 Download and install [Microchip flash programmer software FPExpress](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
@@ -48,7 +49,7 @@ _Note_: the package gtkterm is optional and required only to connect to the refe
 
 _Note_: the package mosquitto-clients is optional and required only to test MQTT funcionality including telemetry and remote firmware updates. It is not required to build, debug, and load MultiZone Firmware or to connect to the target via Ethernet. Any other MQTT client application of choice would do.
 
-Add the three lines below to /etc/udev/rules.d/99.rules to access the Icicle serial port over USB.
+<a name="udev-rules"></a>Add the three lines below to /etc/udev/rules.d/99.rules to access the Icicle serial port over USB.
 ```
 # Microsemi PolarFire SoC Icicle - UART J11 - ID 10c4:ea71 Cygnal Integrated Products, Inc.
 SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4",ATTRS{idProduct}=="ea71", MODE="664", GROUP="plugdev"
@@ -94,11 +95,13 @@ build and load to flash for production (boot mode 1):
 ```
 make load-rom
 ```
+
+
 ### MultiZone Reference application ###
 
 **Local Access via UART**
 
-Make sure you have access to the Icicle kit USB port - see [Linux prerequisites](#linux-prerequisites)
+Make sure you have access to the Icicle kit USB port - see [Linux prerequisites](#udev-rules)
 
 Connect the Icicle Kit micro USB J11 to your computer.
 
@@ -204,6 +207,7 @@ mosquitto_pub -t $CLIENT_ID/zone3 -m ping
 mosquitto_pub -t $CLIENT_ID/zone4 -m ping
 mosquitto_pub -t $CLIENT_ID/zone2 -m MultiZone
 ```
+
 **Remote Firmware Updates**
 
 Remotely deploy new firmware to hart #1:
@@ -238,6 +242,7 @@ H1 >
 ```
 
 Optional: repeat with hart #2 (/dev/ttyUSB2), hart #3 (/dev/ttyUSB3), and hart #4.
+
 
 ### Optional: Eclipse CDT Project ###
 
@@ -275,17 +280,14 @@ Debug:
 ```
 Run > Debug configurations > multizone-iot-sdk-pfsc > Debug
 ```
+
 ![alt text](https://hex-five.com/wp-content/uploads/multizone-eclipse-proj.png)
 
-
-### Technical Specs ###
-
-TBC ...
 
 ### Legalities ###
 
 Please remember that export/import and/or use of strong cryptography software, providing cryptography hooks, or even just communicating technical details about cryptography software is illegal in some parts of the world. So when you import this software to your country, re-distribute it from there or even just email technical suggestions or even source patches to the authors or other people you are strongly advised to pay close attention to any laws or regulations which apply to you. Hex Five Security, Inc. and the authors of the software included in this repository are not liable for any violations you make here. So be careful, it is your responsibility.
 
-MultiZone and HEX-Five are registered trademarks of Hex Five Security, Inc.
+_MultiZone and HEX-Five are registered trademarks of Hex Five Security, Inc._
 
-MultiZone technology is protected by patents US 16450826 and PCT US1938774.
+_MultiZone technology is protected by patents US 11,151,262 and PCT/US2019/038774_
