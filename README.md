@@ -25,7 +25,7 @@ This repository is for the Microchip Icicle Kit board reference design [2021.02]
 
 Download and install [Microsemi Flash Programmer](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
 
-Download and unzip the release asset [Icicle-Kit-2021.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.2/Icicle-Kit-2021.02-Trusted-Firmware.zip)
+Download and unzip the release asset [Icicle-Kit-2021.11-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.3/Icicle-Kit-2021.11-Trusted-Firmware.zip)
 
 Connect the power adapter to J29 and a micro USB cable to J33. Turn on switch SW6. 
 
@@ -71,7 +71,7 @@ _Note_: the SoftConsole software is neededed only to provide the RISC-V Toolchai
 ```
 git clone --recursive https://github.com/hex-five/multizone-iot-sdk-pfsc.git
 cd multizone-iot-sdk-pfsc
-git apply -p1 ext/bare-metal-lib.patch --directory=ext/bare-metal-lib
+git apply -p1 ext/pfsc-platform.patch --directory=ext/pfsc-platform
 ```
 _Note_: Microchip submodule errors "fatal: No url found for submodule path ..." and "Failed to recurse into submodule path ..." can be safely ignored as they have no effect on MultiZone Firmware.
 

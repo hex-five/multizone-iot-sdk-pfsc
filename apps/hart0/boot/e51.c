@@ -7,6 +7,7 @@
 void e51(void) {
 /* ------------------------------------------------------------------------- */
 
+
     /* Init PLIC */
      PLIC_init();
 
@@ -32,14 +33,13 @@ void e51(void) {
 #include "mpfs_hal/startup_gcc/system_startup_defs.h"
 
 /* ------------------------------------------------------------------------- */
-int main_first_hart(void) {
+int main_first_hart(HLS_DATA* hls) {
 /* ------------------------------------------------------------------------- */
     uint64_t hartid = read_csr(mhartid);
-    HLS_DATA* hls = NULL;
 
-    if(hartid == MPFS_HAL_FIRST_HART) {
-
-        uint8_t hard_idx;
+    if(hartid == MPFS_HAL_FIRST_HART)
+    {
+        uint8_t hart_id;
         ptrdiff_t stack_top;
 
         /*
@@ -51,17 +51,20 @@ int main_first_hart(void) {
          * as required.
          */
 #ifdef  MPFS_HAL_HW_CONFIG
-        load_virtual_rom();
         config_l2_cache();
-#endif
-        /* MPFS_HAL_HW_CONFIG */
-        init_memory();
+#endif  /* MPFS_HAL_HW_CONFIG */
 
+        init_memory();
+#ifndef MPFS_HAL_HW_CONFIG
+        hls->my_hart_id = MPFS_HAL_FIRST_HART;
+#endif
 #ifdef  MPFS_HAL_HW_CONFIG
+        load_virtual_rom();
         (void)init_bus_error_unit();
         (void)init_mem_protection_unit();
-
-        /* MPFS_HAL_HW_CONFIG */
+        (void)init_pmp((uint8_t)MPFS_HAL_FIRST_HART);
+        (void)mss_set_apb_bus_cr((uint32_t)LIBERO_SETTING_APBBUS_CR);
+#endif  /* MPFS_HAL_HW_CONFIG */
         /*
          * Initialise NWC
          *      Clocks
@@ -69,15 +72,9 @@ int main_first_hart(void) {
          *      DDR
          *      IOMUX
          */
-        (void)mss_nwc_init();
-#endif
-        /* MPFS_HAL_HW_CONFIG */
-        /*
-         * Copies text section if relocation required
-         */
-        (void)copy_section(&__text_load, &__text_start, &__text_end);
-
 #ifdef  MPFS_HAL_HW_CONFIG
+        (void)mss_nwc_init();
+
         /* main hart init's the PLIC */
         PLIC_init_on_reset();
 
@@ -85,22 +82,31 @@ int main_first_hart(void) {
          * Turn on fic interfaces by default. Drivers will turn on/off other MSS
          * peripherals as required.
          */
-        turn_on_fic0();
-        turn_on_fic1();
-        turn_on_fic2();
-        turn_on_fic3();
-#endif
-        /* MPFS_HAL_HW_CONFIG */
-        (void)main_other_hart();
+        (void)mss_config_clk_rst(MSS_PERIPH_FIC0, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
+        (void)mss_config_clk_rst(MSS_PERIPH_FIC1, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
+        (void)mss_config_clk_rst(MSS_PERIPH_FIC2, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
+        (void)mss_config_clk_rst(MSS_PERIPH_FIC3, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
 
+#endif /* MPFS_HAL_HW_CONFIG */
+        (void)main_other_hart(hls);
     }
 
     /* should never get here */
-    while(true) {
+    while(true)
+    {
        static volatile uint64_t counter = 0U;
        /* Added some code as debugger hangs if in loop doing nothing */
        counter = counter + 1U;
     }
 
     return (0);
+}
+
+
+/* ------------------------------------------------------------------------- */
+uint8_t init_pmp(uint8_t hart_id) {
+/* ------------------------------------------------------------------------- */
+
+  //pmp_configure(hart_id);
+    return (0U);
 }

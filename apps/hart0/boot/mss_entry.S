@@ -291,7 +291,7 @@ restore_regs:
     .globl  zero_section
     .type   zero_section, @function
 zero_section:
-    beq a0, a1, .zero_section_done
+    bge a0, a1, .zero_section_done
     sd  zero, (a0)
     addi    a0, a0, 8
     j   zero_section
@@ -331,100 +331,6 @@ copy_section:
     addi    a1, a1, 8              // exec_start_addr = exec_start_addr + 8
     j   .check_if_copy_section_done
 .copy_section_done:
-    ret
-
-
-
-/***********************************************************************************
- *
- * memfill() - fills memory, alternate to lib function when not available
- */
-    // config_copy helper function:
-    //  a0 = dest
-    //  a1 = value to fill
-    //  a2 = length
-    .globl  memfill
-    .type   memfill, @function
-memfill:
-    mv  t1,a0
-    mv  t2,a1
-    beqz    a2,2f
-1:
-    sb  t2,0(t1)
-    addi    a2,a2,-1
-    addi    t1,t1,1
-    bnez    a2,1b
-2:
-    ret
-
-/***********************************************************************************
- *
- * The following config_copy() symbol overrides the weak symbol in the HAL and does
- * a safe copy of HW config data
- */
-    // config_copy helper function:
-    //  a0 = dest
-    //  a1 = src
-    //  a2 = length
-    .globl  config_copy
-    .type   config_copy, @function
-config_copy:
-    mv  t1,a0
-    beqz    a2,2f
-1:
-    lb  t2,0(a1)
-    sb  t2,0(t1)
-    addi    a2,a2,-1
-    addi    t1,t1,1
-    addi    a1,a1,1
-    bnez    a2,1b
-2:
-    ret
-
-/***********************************************************************************
- *
- * config_32_copy () Copies a word at a time, used when copying to contigous registers
- */
-    // config_copy helper function:
-    //  a0 = dest
-    //  a1 = src
-    //  a2 = length
-    .globl  config_32_copy
-    .type   config_32_copy, @function
-config_32_copy:
-    mv  t1,a0
-    beqz    a2,2f
-1:
-    lw  t2,0(a1)
-    sw  t2,0(t1)
-    addi    a2,a2,-4
-    addi    t1,t1,4
-    addi    a1,a1,4
-    bnez    a2,1b
-2:
-    ret
-
- /***********************************************************************************
- *
- * config_64_copy - copying using 64 bit loads, addresses must be on 64 bit boundary
- */
-    // config_copy helper function:
-    //  a0 = dest
-    //  a1 = src
-    //  a2 = length
-    .globl  config_64_copy
-    .type   config_64_copy, @function
-config_64_copy:
-    mv  t1,a0
-    beqz    a2,2f
-1:
-    ld  t2,0(a1)
-    sd  t2,0(t1)
-    addi    a2,a2,-8
-    addi    t1,t1,8
-    addi    a1,a1,8
-    bnez    a2,1b
-2:
     ret
 
 /***********************************************************************************

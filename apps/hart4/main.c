@@ -4,7 +4,7 @@
 #include <stdlib.h>     // strtoul()
 #include <string.h>     // strxxx()
 
-#include "drivers/mss_mmuart/mss_uart.h"
+#include "drivers/mss/mss_mmuart/mss_uart.h"
 #include "mpfs_hal/mss_hal.h"
 #include "mss_multizone.h"
 

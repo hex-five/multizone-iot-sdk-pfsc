@@ -7,11 +7,11 @@ ASM_SRCS := ./mss_entry.S
 
 LINKER_SCRIPT = ./linker.ld
 
-EXT_DIR := ../../../ext
-PLATFORM_DIR      := $(EXT_DIR)/bare-metal-lib/src/platform
+EXT_DIR := $(abspath ../../../ext)
+PLATFORM_DIR      := $(EXT_DIR)/pfsc-platform
 ICICLE_KIT_ES_DIR := $(EXT_DIR)/icicle-kit-es
-SOC_CONF_DIR      := $(EXT_DIR)/icicle-kit-es/soc_config
-SOC_CONF_GEN_DIR  := $(EXT_DIR)/bare-metal-lib/src/platform/soc_config_generator
+SOC_CONF_DIR      := $(EXT_DIR)/icicle-kit-es/fpga_design_config
+SOC_CONF_GEN_DIR  := $(EXT_DIR)/pfsc-platform/soc_config_generator
 SOC_CONF_XML_DIR  := $(EXT_DIR)/icicle-ref-design/XML
 MULTIZONE_DIR     := $(EXT_DIR)/multizone
 
@@ -22,6 +22,7 @@ INCLUDES += -I $(PLATFORM_DIR)/platform_config_reference
 INCLUDES += -I $(MULTIZONE_DIR)
 
 #ASM_SRCS+= $(PLATFORM_DIR)/mpfs_hal/startup_gcc/mss_entry.S
+ASM_SRCS+= $(PLATFORM_DIR)/mpfs_hal/startup_gcc/mss_utils.S
 #ASM_SRCS+= $(PLATFORM_DIR)/mpfs_hal/startup_gcc/mss_mutex.S
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/system_startup.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/newlib_stubs.c
@@ -32,18 +33,20 @@ C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_irq_handler_stubs.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_l2_cache.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_mpu.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_mtrap.c
+C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_peripherals.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_plic.c
-C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_pmp.c
+#C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_pmp.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_util.c
 #C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_cfm.c
 #C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_ddr.c
 #C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_ddr_debug.c
+#C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_ddr_test_pattern.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_io.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_nwc_init.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_pll.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/nwc/mss_sgmii.c
-C_SRCS  += $(PLATFORM_DIR)/drivers/mss_mmuart/mss_uart.c
-C_SRCS  += $(PLATFORM_DIR)/drivers/mss_gpio/mss_gpio.c
+C_SRCS  += $(PLATFORM_DIR)/drivers/mss/mss_mmuart/mss_uart.c
+C_SRCS  += $(PLATFORM_DIR)/drivers/mss/mss_gpio/mss_gpio.c
 
 CFLAGS += -march=rv64gc -mabi=lp64d # g = imafd
 CFLAGS += -mcmodel=medany -msmall-data-limit=8
@@ -89,10 +92,12 @@ $(ASM_OBJS): %.o: %.S $(HEADERS) $(SOC_CONF_DIR)
 $(C_OBJS): %.o: %.c $(HEADERS) $(SOC_CONF_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
+.SILENT: $(SOC_CONF_DIR)
 $(SOC_CONF_DIR):
-	@python3 $(SOC_CONF_GEN_DIR)/mpfs_configuration_generator.py \
-    $(SOC_CONF_XML_DIR)/ICICLE_MSS_eMMC_cfg.xml \
-    $(ICICLE_KIT_ES_DIR)
+    # MCHP Bug - mpfs_configuration_generator.py v2021.11: xml file name ignored unless in current folder
+	echo "mpfs_configuration_generator.py ICICLE_MSS_cfg.xml"
+	cd $(SOC_CONF_XML_DIR); \
+	python3 $(SOC_CONF_GEN_DIR)/mpfs_configuration_generator.py ICICLE_MSS_cfg.xml $(ICICLE_KIT_ES_DIR) > /dev/null
 
 .PHONY: clean
 clean:

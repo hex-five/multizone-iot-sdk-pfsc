@@ -23,14 +23,14 @@
 							<builder id="cdt.managedbuild.builder.gnu.cross.242733657" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1516116749" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.2044885596" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/apps/hart0/bsp}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext/multizone}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext/lwip/src/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext/mbedtls/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext/icicle-kit-es/platform_config}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext/icicle-kit-es}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hexfive-iot-sdk-pfsc/ext/bare-metal-lib/src/platform}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/apps/hart0/bsp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/multizone}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/lwip/src/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/mbedtls/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/icicle-kit-es/platform_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/icicle-kit-es}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/pfsc-platform}&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.preprocessor.def.symbols.799802060" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_G5_SOC"/>
