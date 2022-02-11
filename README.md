@@ -73,8 +73,6 @@ git clone --recursive https://github.com/hex-five/multizone-iot-sdk-pfsc.git
 cd multizone-iot-sdk-pfsc
 git apply -p1 ext/pfsc-platform.patch --directory=ext/pfsc-platform
 ```
-_Note_: Microchip submodule errors "fatal: No url found for submodule path ..." and "Failed to recurse into submodule path ..." can be safely ignored as they have no effect on MultiZone Firmware.
-
 ```
 export SC_INSTALL_DIR=~/Microchip/SoftConsole-v2021.3-7.0.0.599
 export FPGENPROG=~/microsemi/Program_Debug_v2021.3/Program_Debug_Tool/bin64/fpgenprog
