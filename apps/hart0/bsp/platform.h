@@ -9,8 +9,20 @@
 #define APB_AHB_FREQ 150012500 // 150MHz (UART)
 
 #define PMP 16
-#define IPC_RECV    0x01000A00 /* MultiZone TEE < AMP */
-#define IPC_SEND    0x01000A80 /* MultiZone TEE > AMP */
+
+// -----------------------------------------------------------------------------
+// IPC Buffers (MultiZone TEE <> AMP)
+// -----------------------------------------------------------------------------
+#define IPC_BASE 0x01000A00
+
+#define IPC_RECV_H1  0x000 /* H0 < H1 */
+#define IPC_SEND_H1  0x080 /* H0 > H1 */
+#define IPC_RECV_H2  0x100 /* H0 < H2 */
+#define IPC_SEND_H2  0x180 /* H0 > H2 */
+#define IPC_RECV_H3  0x200 /* H0 < H3 */
+#define IPC_SEND_H3  0x280 /* H0 > H3 */
+#define IPC_RECV_H4  0x300 /* H0 < H4 */
+#define IPC_SEND_H4  0x380 /* H0 > H4 */
 
 // -----------------------------------------------------------------------------
 // RTC (CLIC)

@@ -24,8 +24,7 @@ LINK_DEPS += $(LINKER_SCRIPT)
 
 CLEAN_OBJS += $(TARGET) $(LINK_OBJS)
 
-CFLAGS += -march=$(RISCV_ARCH)
-CFLAGS += -mabi=$(RISCV_ABI)
+CFLAGS += -march=rv64imac -mabi=lp64
 CFLAGS += -mcmodel=medany
 CFLAGS += -msmall-data-limit=8
 CFLAGS += -ffunction-sections -fdata-sections

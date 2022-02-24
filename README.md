@@ -214,10 +214,10 @@ mosquitto_pub -t $CLIENT_ID/hart1 -f apps/hart1/hart1.bin
 
 On your computer, start a serial terminal console (GtkTerm) and connect to /dev/ttyUSB1 at 115200-8-N-1.
 ```
-mosquitto_pub -t $CLIENT_ID/zone0 -m ping
-mosquitto_pub -t $CLIENT_ID/zone0 -m Microchip
+mosquitto_pub -t $CLIENT_ID/zone5 -m ping
+mosquitto_pub -t $CLIENT_ID/zone5 -m Microchip
 ```
-Observe the newly deployed firmware running on hart #1 (Zone 0) and connected to the local UART /dev/ttyUSB1
+Observe the newly deployed firmware running on hart #1 (Zone 5) and connected to the local UART /dev/ttyUSB1
 
 ```
 ===================================================================
@@ -236,7 +236,7 @@ Z1 > Microchip
 
 H1 > 
 ```
-Optional: repeat with hart #2 (/dev/ttyUSB2), hart #3 (/dev/ttyUSB3), and hart #4.
+Optional: repeat with hart #2 in Zone 6 (/dev/ttyUSB2), hart #3 in Zone 7 (/dev/ttyUSB3), and hart #4 in Zone 8.
 
 
 ### Optional: Eclipse CDT Project ###

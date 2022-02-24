@@ -12,7 +12,7 @@
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
-typedef enum {zone0, zone1, zone2, zone3, zone4} Zone;
+typedef enum {zone1=1, zone2, zone3, zone4, zone5, zone6, zone7, zone8} Zone;
 
 #define BUFFER_SIZE 32
 static volatile struct{
@@ -33,7 +33,10 @@ typedef volatile struct Inbox {
     unsigned len;
 } Inbox;
 
-static Inbox inbox[zone4 + 1] = {
+static Inbox inbox[8] = {
+        { .msg = "", .len = 0 },
+        { .msg = "", .len = 0 },
+        { .msg = "", .len = 0 },
         { .msg = "", .len = 0 },
         { .msg = "", .len = 0 },
         { .msg = "", .len = 0 },
@@ -42,11 +45,14 @@ static Inbox inbox[zone4 + 1] = {
 };
 
 int inbox_empty(void){
-	return (inbox[zone0].len==0 &&
-	        inbox[zone1].len==0 &&
-	        inbox[zone2].len==0 &&
-            inbox[zone3].len==0 &&
-	        inbox[zone4].len==0
+	return (inbox[0].len==0 &&
+	        inbox[1].len==0 &&
+	        inbox[2].len==0 &&
+            inbox[3].len==0 &&
+	        inbox[4].len==0 &&
+            inbox[5].len==0 &&
+            inbox[6].len==0 &&
+            inbox[7].len==0
 	);
 }
 
@@ -108,9 +114,9 @@ __attribute__((interrupt())) void trp_isr(void)  { // nmi traps (0)
 }
 __attribute__((interrupt())) void msi_isr(void)  { // msip/inbox (3)
 
-    for (Zone zone = zone0; zone <= zone4; zone++) {
+    for (Zone zone = zone1; zone <= zone8; zone++) {
 
-        Inbox *const in = &inbox[zone];
+        Inbox *const in = &inbox[zone-1];
 
         char msg[MSG_SIZE];
         if (MZONE_RECV(zone, msg)){
@@ -412,9 +418,9 @@ void msg_handler() {
 
     CSRC(mie, 1 << 3);
 
-    for (Zone zone = zone0; zone <= zone4; zone++) {
+    for (Zone zone = zone1; zone <= zone8; zone++) {
 
-        Inbox *const in = &inbox[zone];
+        Inbox *const in = &inbox[zone-1];
         char *const msg = (char *const)(in->msg);
         const size_t len = strnlen(msg, in->len);
 
@@ -495,28 +501,28 @@ void cmd_handler(){
 			DMA_REG(DMA_TR_DEST_OFF) = strtoul(tk[2], NULL, 16);
 			DMA_REG(DMA_TR_SIZE_OFF) = strtoul(tk[3], NULL, 16);
 			DMA_REG(DMA_CH_CTRL_OFF) = 0b0001; // en irqs & start transfer
-		} else printf("Syntax: dma source dest pos \n");
+	    } else printf("Syntax: dma source dest size \n");
 #endif
 
 	// --------------------------------------------------------------------
 	} else if (strcmp(tk[0], "send")==0){
 	// --------------------------------------------------------------------
-		if (tk[1] != NULL && tk[1][0]>='0' && tk[1][0]<='4' && tk[2] != NULL){
+		if (tk[1] != NULL && tk[1][0]>='1' && tk[1][0]<='8' && tk[2] != NULL){
 			char msg[16]; strncpy(msg, tk[2], (sizeof msg)-1);
 			if (!MZONE_SEND( tk[1][0]-'0', msg) )
 				printf("Error: Inbox full.\n");
-		} else printf("Syntax: send {0|1|2|3|4} message \n");
+		} else printf("Syntax: send {1|2|3|4|5|6|7|8} message \n");
 
 	// --------------------------------------------------------------------
 	} else if (strcmp(tk[0], "recv")==0){
 	// --------------------------------------------------------------------
-		if (tk[1] != NULL && tk[1][0]>='0' && tk[1][0]<='4'){
+		if (tk[1] != NULL && tk[1][0]>='1' && tk[1][0]<='8'){
 			char msg[16];
 			if (MZONE_RECV(tk[1][0]-'0', msg))
 				printf("msg : %.16s\n", msg);
 			else
 				printf("Error: Inbox empty.\n");
-		} else printf("Syntax: recv {0|1|2|3|4} \n");
+		} else printf("Syntax: recv {1|2|3|4|5|6|7|8} \n");
 
 	// --------------------------------------------------------------------
 	} else if (strcmp(tk[0], "yield")==0){

@@ -5,15 +5,18 @@
 #include "platform.h"
 #include "multizone.h"
 
-typedef enum {zone0, zone1, zone2, zone3, zone4} Zone;
+typedef enum {zone1=1, zone2, zone3, zone4, zone5, zone6, zone7, zone8} Zone;
 
-static volatile char inbox[1+4][16] = { {'\0'}, {'\0'}, {'\0'}, {'\0'}, {'\0'} };
+static volatile char inbox[8][16] = { "", "", "", "", "", "", "", "" };
 int inbox_empty(void){
     return (inbox[0][0]=='\0' &&
             inbox[1][0]=='\0' &&
             inbox[2][0]=='\0' &&
             inbox[3][0]=='\0' &&
-            inbox[4][0]=='\0');
+            inbox[4][0]=='\0' &&
+            inbox[5][0]=='\0' &&
+            inbox[6][0]=='\0' &&
+            inbox[7][0]=='\0'  );
 }
 
 // ------------------------------------------------------------------------
@@ -38,10 +41,10 @@ __attribute__((interrupt())) void trp_handler(void)	 { // trap handler (0)
 }
 __attribute__((interrupt())) void msi_handler(void)  { // machine software interrupt (3)
 
-    for (Zone zone = zone0; zone <= zone4; zone++) {
+    for (Zone zone = zone1; zone <= zone8; zone++) {
         char msg[16];
         if (MZONE_RECV(zone, msg))
-            memcpy((char*) &inbox[zone][0], msg, sizeof inbox[0]);
+            memcpy((char*) &inbox[zone-1][0], msg, sizeof inbox[0]);
     }
 
 }
@@ -67,9 +70,10 @@ __attribute__((interrupt())) void plic_handler(void) { // plic interrupt (11)
 
 		if (T > debounce){
 			debounce = T + 250*RTC_FREQ/1000;
-            MZONE_SEND(0, "IRQ SW2"); // app cluster
-            MZONE_SEND(1, "IRQ SW2"); // mqtt broker
-            MZONE_SEND(2, "IRQ SW2"); // console
+		    for (Zone zone = zone1; zone <= zone8; zone++) {
+		        if (zone!=zone3)
+		            MZONE_SEND(zone, "IRQ SW2");
+		    }
 		    GPIO_REG(GPIO_REG(GPIO_GPOUT) & LED4 ? GPIO_CLEAR_BITS : GPIO_SET_BITS) = LED4;
 		}
 
@@ -80,9 +84,10 @@ __attribute__((interrupt())) void plic_handler(void) { // plic interrupt (11)
 
 		if (T > debounce){
 			debounce = T + 250*RTC_FREQ/1000;
-            MZONE_SEND(0, "IRQ SW3"); // app cluster
-            MZONE_SEND(1, "IRQ SW3"); // mqtt broker
-            MZONE_SEND(2, "IRQ SW3"); // console
+            for (Zone zone = zone1; zone <= zone8; zone++) {
+                if (zone!=zone3)
+                    MZONE_SEND(zone, "IRQ SW3");
+            }
             GPIO_REG(GPIO_REG(GPIO_GPOUT) & LED3 ? GPIO_CLEAR_BITS : GPIO_SET_BITS) = LED3;
 		}
 
@@ -141,26 +146,34 @@ int main (void){
 
     while (1) {
 
-        // Message handler
+        // Asynchronous message handling example
         CSRC(mie, 1 << 3);
 
-        for (Zone zone = zone0; zone <= zone4; zone++) {
+        for (Zone zone = zone1; zone <= zone8; zone++) {
 
-            char * const msg = (char *)inbox[zone];
+            char * const msg = (char *)inbox[zone-1];
 
             if (msg[0] != '\0') {
 
-                if (strncmp("ping", (char*) msg, sizeof msg[0]) == 0)
+                if (strcmp("ping", (char*) msg)==0) {
                     MZONE_SEND(zone, (char[16]){"pong"});
-                else if (strcmp("mie=0", (char*) msg) == 0)
+
+                /* test: wfi resume with global irq disabled - irqs not taken */
+                } else if (strcmp("mstatus.mie=0", (char*) msg)==0) {
                     CSRC(mstatus, 1 << 3);
-                else if (strcmp("mie=1", (char*) msg) == 0)
+
+                /* test: wfi resume with global irq enabled - irqs taken */
+                } else if (strcmp("mstatus.mie=1", (char*) msg)==0) {
                     CSRS(mstatus, 1 << 3);
-                else if (strcmp("block", (char*) msg) == 0) {
-                    CSRC(mstatus, 1 << 3);
-                    for (;;)
-                        ;
-                } //else MZONE_SEND(zone, msg);
+
+                /* test: preemptive scheduler - block for good */
+                } else if (strcmp("block", (char*) msg)==0) {
+                    CSRC(mstatus, 1 << 3); for (;;);
+
+                } else {
+                    // MZONE_SEND(zone, msg);
+
+                }
 
                 msg[0] = '\0';
 
@@ -170,8 +183,17 @@ int main (void){
 
         CSRS(mie, 1 << 3);
 
-        // Wait For Interrupt
+        // Wait For Interrupt - irqs taken if mstatus.mie=1
         MZONE_WFI();
+
+        // test: wfi resume with global irq disabled - poll inbox
+        if ( (CSRR(mstatus) & 1<<3) ==0){
+            for (Zone zone = zone1; zone <= zone8; zone++) {
+                char msg[16];
+                if (MZONE_RECV(zone, msg))
+                    memcpy((char*) &inbox[zone-1][0], msg, sizeof inbox[0]);
+            }
+        }
 
     }
 

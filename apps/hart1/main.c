@@ -21,12 +21,12 @@ typedef enum {zone1=1, zone2, zone3, zone4} Zone;
 static char inputline[32+1]="";
 
 #define MSG_SIZE 16
-static volatile char inbox[zone4][MSG_SIZE] = { "", "", "", ""};
+static volatile char inbox[4][MSG_SIZE] = { "", "", "", ""};
 int inbox_empty(void){
-	return (inbox[zone1-1][0]=='\0' &&
-	        inbox[zone2-1][0]=='\0' &&
-            inbox[zone3-1][0]=='\0' &&
-	        inbox[zone4-1][0]=='\0');
+	return (inbox[0][0]=='\0' &&
+	        inbox[1][0]=='\0' &&
+            inbox[2][0]=='\0' &&
+	        inbox[3][0]=='\0');
 }
 
 static int hartid;

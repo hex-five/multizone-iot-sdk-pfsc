@@ -36,6 +36,7 @@
 									<listOptionValue builtIn="false" value="TARGET_G5_SOC"/>
 									<listOptionValue builtIn="false" value="MSS_MAC_SIMPLE_TX_QUEUE"/>
 									<listOptionValue builtIn="false" value="GMAC=1"/>
+									<listOptionValue builtIn="false" value="MAC_ADDR={0x00,0xFC,0x00,0x12,0x34,0x56}"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2103622833" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
