@@ -46,8 +46,8 @@ MEMORY
     u54_2_itim (rwx) : ORIGIN = 0x01810000, LENGTH = 28k
     u54_3_itim (rwx) : ORIGIN = 0x01818000, LENGTH = 28k
     u54_4_itim (rwx) : ORIGIN = 0x01820000, LENGTH = 28k
-    l2lim_prog (rx)  : ORIGIN = boot_prog, LENGTH = boot_prog_len /* Hex Five mod */
-    l2lim_data (rwx) : ORIGIN = boot_data, LENGTH = boot_data_len /* Hex Five mod */   
+    l2lim_prog (rx)  : ORIGIN = boot_prog,  LENGTH = boot_prog_len /* Hex Five mod */
+    l2lim_data (rwx) : ORIGIN = boot_data,  LENGTH = boot_data_len /* Hex Five mod */   
     scratchpad(rwx)  : ORIGIN = 0x0A000000, LENGTH = 256k
     /* DDR sections example */
     ddr_cached_32bit (rwx) : ORIGIN  = 0x80000000, LENGTH = 768M
@@ -58,7 +58,7 @@ MEMORY
     ddr_wcb_38bit (rwx) : ORIGIN  = 0x1800000000, LENGTH  = 0k
 }
 
-HEAP_SIZE           = 0k;               /* needs to be calculated for your application if using */
+HEAP_SIZE           = 4k;               /* needs to be calculated for your application if using */
 
 /*
  * There is common area for shared variables, accessed from a pointer in a harts HLS
@@ -84,7 +84,7 @@ SIZE_OF_COMMON_HART_MEM = 0k;
  * These are the stack sizes that will be allocated to each hart before starting
  * each hart's application function, e51(), u54_1(), u54_2(), u54_3(), u54_4().
  */
-STACK_SIZE_E51_APPLICATION = 1k;
+STACK_SIZE_E51_APPLICATION   = 8k;
 STACK_SIZE_U54_1_APPLICATION = 0k;
 STACK_SIZE_U54_2_APPLICATION = 0k;
 STACK_SIZE_U54_3_APPLICATION = 0k;

@@ -154,7 +154,7 @@
  * Note: If you are the zero stage bootloader, set this to one.
  */
 #ifndef MPFS_HAL_CLEAR_MEMORY
-#define MPFS_HAL_CLEAR_MEMORY  1
+#define MPFS_HAL_CLEAR_MEMORY  1 
 #endif
 
 /*
@@ -165,7 +165,7 @@
  * The reason you may want to use below is to save code space.
  */
 #define SGMII_SUPPORT
-//#define DDR_SUPPORT /* Hex Five mod */
+#define DDR_SUPPORT
 #define MSSIO_SUPPORT
 
 /*

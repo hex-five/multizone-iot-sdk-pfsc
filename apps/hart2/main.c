@@ -13,7 +13,7 @@ mss_uart_instance_t *uart = &g_mss_uart2_lo;
 
 #define mss_printf(format, args...) { \
             snprintf(mss_uart_tx_buf, sizeof mss_uart_tx_buf, format, ## args); \
-            MSS_UART_polled_tx_string (uart, mss_uart_tx_buf); \
+            MSS_UART_polled_tx_string (uart, (const uint8_t *)mss_uart_tx_buf); \
         }
 
 typedef enum {zone1=1, zone2, zone3, zone4} Zone;
@@ -22,7 +22,7 @@ static char inputline[32+1]="";
 
 #define MSG_SIZE 16
 static volatile char inbox[4][MSG_SIZE] = { "", "", "", ""};
-int inbox_empty(void){
+int inbox_is_empty(void){
 	return (inbox[0][0]=='\0' &&
 	        inbox[1][0]=='\0' &&
             inbox[2][0]=='\0' &&
@@ -34,30 +34,30 @@ static int hartid;
 // ------------------------------------------------------------------------
 void handle_m_trap_h2(uintptr_t * regs, uintptr_t mcause, uintptr_t mepc){
 
-    uint64_t mtval = read_csr(mtval);
+    unsigned mtval = read_csr(mtval);
 
     switch(mcause){
 
     case CAUSE_LOAD_ACCESS :
-        mss_printf("Load access fault : 0x%08x 0x%08x 0x%08x \n\r", mcause, mepc, mtval);
+        mss_printf("Load access fault : 0x%08x 0x%08x 0x%08x \n\r", (unsigned)mcause, (unsigned)mepc, mtval);
         write_csr(mepc, mepc + (((*(char *)mepc) & 0b11) == 0b11 ? 4 : 2)); // skip faulty instruction
         return;
 
     case CAUSE_STORE_ACCESS :
-        mss_printf("Store access fault : 0x%08x 0x%08x 0x%08x \n\r", mcause, mepc, mtval);
+        mss_printf("Store access fault : 0x%08x 0x%08x 0x%08x \n\r", (unsigned)mcause, (unsigned)mepc, mtval);
         write_csr(mepc, mepc + (((*(char *)mepc) & 0b11) == 0b11 ? 4 : 2)); // skip faulty instruction
         return;
 
     case CAUSE_FETCH_ACCESS :
-        mss_printf("Instr access fault : 0x%08x 0x%08x 0x%08x \n\r", mcause, mepc, mtval);
+        mss_printf("Instr access fault : 0x%08x 0x%08x 0x%08x \n\r", (unsigned)mcause, (unsigned)mepc, mtval);
         break;
 
-    default : mss_printf("Exception : 0x%08x 0x%08x 0x%08x \n\r", mcause, mepc, mtval);
+    default : mss_printf("Exception : 0x%08x 0x%08x 0x%08x \n\r", (unsigned)mcause, (unsigned)mepc, mtval);
 
     }
 
     mss_printf("Press any key to continue \n\r");
-    char c='\0'; while( MSS_UART_get_rx(uart, &c, 1) == 0 ){;}
+    unsigned char c='\0'; while( MSS_UART_get_rx(uart, &c, 1) == 0 ){;}
     inputline[0]='\0';
     asm ("la t0, main; csrw mepc, t0; mret");
 
@@ -145,7 +145,9 @@ void print_pmp(void){
 
 		}
 
-		mss_printf("0x%02x%08x 0x%02x%08x %s %s \n\r", (uint8_t)(start>>32), start, (uint8_t)(end>>32), end, rwx, type);
+		mss_printf("0x%02x%08x 0x%02x%08x %s %s \n\r",
+		        (unsigned)(start>>32), (unsigned)start, (unsigned)(end>>32),
+		        (unsigned)end, rwx, type);
 
 	}
 
@@ -361,7 +363,7 @@ int readline(const char c) {
 }
 
 // ------------------------------------------------------------------------
-void main(void) {
+int main(void) {
 
     hartid = read_csr(mhartid);
 
@@ -388,7 +390,7 @@ void main(void) {
     while(1){
 
     	// UART RX event handler
-        char c = '\0';
+        unsigned char c = '\0';
 		if (MSS_UART_get_rx(uart, &c, 1) && readline(c)){
 			cmd_handler();
 			mss_printf("\n\rH%d > ", hartid);
@@ -396,7 +398,7 @@ void main(void) {
 		}
 
 		// MultiZone IPC message handler
-		if (!inbox_empty()){
+		if (!inbox_is_empty()){
 		    msg_handler();
 		}
 

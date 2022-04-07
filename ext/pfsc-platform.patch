@@ -203,6 +203,32 @@ index d528995..be544f4 100644
  
  #ifdef __cplusplus
  extern "C" {
+diff --git a/drivers/mss/mss_mmc/mss_mmc.c b/drivers/mss/mss_mmc/mss_mmc.c
+index 38862b7..cb31dda 100644
+--- a/drivers/mss/mss_mmc/mss_mmc.c
++++ b/drivers/mss/mss_mmc/mss_mmc.c
+@@ -308,7 +308,7 @@ MSS_MMC_init
+     uint8_t hw_hs_timing;
+ 
+     /* Reset MMC */
+-    SYSREG->SOFT_RESET_CR &= ~(MMC_SET << MMC_SOFTWARE_RESET_SHIFT);
++//  SYSREG->SOFT_RESET_CR &= ~(MMC_SET << MMC_SOFTWARE_RESET_SHIFT); /* Hex Five Mod */
+     /* Disable MMC interrupt */
+     PLIC_DisableIRQ(MMC_main_PLIC);
+ 
+diff --git a/drivers/mss/mss_mmc/mss_mmc_regs.h b/drivers/mss/mss_mmc/mss_mmc_regs.h
+index 3d3113e..518e3a4 100644
+--- a/drivers/mss/mss_mmc/mss_mmc_regs.h
++++ b/drivers/mss/mss_mmc/mss_mmc_regs.h
+@@ -335,7 +335,7 @@ typedef struct {
+ /* Command Queuing - interrupt */
+ #define SRS12_CMD_QUEUING_INT       0x00004000u
+ /* Re-Tuning Event */
+-/*#define SRS12_RETUNING_EVENT        0x00001000u
++/*#define SRS12_RETUNING_EVENT        0x00001000u*/
+ /* Interrupt on line C */
+ #define SRS12_INTERRUPT_ON_LINE_C   0x00000800u
+ /* Interrupt on line B */
 diff --git a/mpfs_hal/common/mss_mtrap.c b/mpfs_hal/common/mss_mtrap.c
 index 2226d7b..c50b160 100644
 --- a/mpfs_hal/common/mss_mtrap.c

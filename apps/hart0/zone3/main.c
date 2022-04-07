@@ -1,22 +1,30 @@
 /* Copyright(C) 2020 Hex Five Security, Inc. - All Rights Reserved */
 
 #include <string.h>
+#include <stdlib.h> // itoa()
 
 #include "platform.h"
 #include "multizone.h"
 
 typedef enum {zone1=1, zone2, zone3, zone4, zone5, zone6, zone7, zone8} Zone;
 
-static volatile char inbox[8][16] = { "", "", "", "", "", "", "", "" };
-int inbox_empty(void){
-    return (inbox[0][0]=='\0' &&
-            inbox[1][0]=='\0' &&
-            inbox[2][0]=='\0' &&
-            inbox[3][0]=='\0' &&
-            inbox[4][0]=='\0' &&
-            inbox[5][0]=='\0' &&
-            inbox[6][0]=='\0' &&
-            inbox[7][0]=='\0'  );
+volatile char const inbox[8][16] = { "", "", "", "", "", "", "", "" };
+int inbox_is_empty(void){
+
+    CSRC(mie, 1<<3);
+
+    const int empty =  (inbox[0][0]=='\0' &&
+                        inbox[1][0]=='\0' &&
+                        inbox[2][0]=='\0' &&
+                        inbox[3][0]=='\0' &&
+                        inbox[4][0]=='\0' &&
+                        inbox[5][0]=='\0' &&
+                        inbox[6][0]=='\0' &&
+                        inbox[7][0]=='\0'  );
+
+    CSRS(mie, 1<<3);
+
+    return empty;
 }
 
 // ------------------------------------------------------------------------
@@ -61,38 +69,41 @@ __attribute__((interrupt())) void plic_handler(void) { // plic interrupt (11)
 
 	const uint32_t plic_int = PLIC_REG(PLIC_CLAIM); // PLIC claim
 
-	static uint64_t debounce = 0;
 	const uint64_t T = MZONE_RDTIME();
 
 	switch (plic_int) {
 
-	case PLIC_SRC_SW2:
+	case PLIC_SRC_SW2: {
 
-		if (T > debounce){
-			debounce = T + 250*RTC_FREQ/1000;
-		    for (Zone zone = zone1; zone <= zone8; zone++) {
-		        if (zone!=zone3)
-		            MZONE_SEND(zone, "IRQ SW2");
-		    }
-		    GPIO_REG(GPIO_REG(GPIO_GPOUT) & LED4 ? GPIO_CLEAR_BITS : GPIO_SET_BITS) = LED4;
-		}
-
-		GPIO_REG(GPIO_INTR) |= SW2; // clear irq
-		break;
-
-	case PLIC_SRC_SW3:
-
-		if (T > debounce){
-			debounce = T + 250*RTC_FREQ/1000;
+	    static uint64_t debounce_sw2 = 0;
+        if (T > debounce_sw2){
+            debounce_sw2 = T + 200*RTC_FREQ/1000;
+            static unsigned count_sw2 = 0;
+            char msg[16]="IRQ SW2 ("; utoa(count_sw2++, msg+9, 10); strcat(msg, ")");
             for (Zone zone = zone1; zone <= zone8; zone++) {
-                if (zone!=zone3)
-                    MZONE_SEND(zone, "IRQ SW3");
+                MZONE_SEND(zone, msg);
             }
             GPIO_REG(GPIO_REG(GPIO_GPOUT) & LED3 ? GPIO_CLEAR_BITS : GPIO_SET_BITS) = LED3;
+        }
+
+		GPIO_REG(GPIO_INTR) |= SW2; // clear irq
+	    } break;
+
+	case PLIC_SRC_SW3: {
+
+        static uint64_t debounce_sw3 = 0;
+		if (T > debounce_sw3){
+		    debounce_sw3 = T + 200*RTC_FREQ/1000;
+		    static unsigned count_sw3 = 0;
+            char msg[16]="IRQ SW3 ("; utoa(count_sw3++, msg+9, 10); strcat(msg, ")");
+            for (Zone zone = zone1; zone <= zone8; zone++) {
+                MZONE_SEND(zone, msg);
+            }
+            GPIO_REG(GPIO_REG(GPIO_GPOUT) & LED4 ? GPIO_CLEAR_BITS : GPIO_SET_BITS) = LED4;
 		}
 
 		GPIO_REG(GPIO_INTR) |= SW3; // clear irq
-		break;
+	    } break;
 
 	}
 
@@ -103,8 +114,8 @@ __attribute__((interrupt())) void plic_handler(void) { // plic interrupt (11)
 // ------------------------------------------------------------------------
 int main (void){
 
-	//while(1) MZONE_YIELD();
 	//while(1) MZONE_WFI();
+    //while(1) MZONE_YIELD();
 	//while(1);
 
  	// vectored trap handler
@@ -125,9 +136,9 @@ int main (void){
 	GPIO_REG(LED4_CFG) = 1<<0; // LED4 (yellow) gpio2.19 output
 
 	// Enable PLIC sources: SW2 priority 1, SW3 priority 2
-	PLIC_REG(PLIC_PRI + (PLIC_SRC_SW2 << PLIC_SHIFT_PER_SRC)) = 0x1; // P1
+	PLIC_REG(PLIC_PRI + (PLIC_SRC_SW2 << PLIC_SHIFT_PER_SRC)) = 0x1; // P1 (1 = lowest)
 	PLIC_REG(PLIC_EN + PLIC_SRC_SW2/32*4) |= 1 << (PLIC_SRC_SW2 % 32);
-	PLIC_REG(PLIC_PRI + (PLIC_SRC_SW3 << PLIC_SHIFT_PER_SRC)) = 0x2; // P2
+	PLIC_REG(PLIC_PRI + (PLIC_SRC_SW3 << PLIC_SHIFT_PER_SRC)) = 0x1; // P1
 	PLIC_REG(PLIC_EN + PLIC_SRC_SW3/32*4) |= 1 << (PLIC_SRC_SW3 % 32);
 	CSRS(mie, 1<<11);
 
@@ -157,6 +168,9 @@ int main (void){
 
                 if (strcmp("ping", (char*) msg)==0) {
                     MZONE_SEND(zone, (char[16]){"pong"});
+
+                } else if (strcmp("restart", msg)==0){
+                    asm ("j _start");
 
                 /* test: wfi resume with global irq disabled - irqs not taken */
                 } else if (strcmp("mstatus.mie=0", (char*) msg)==0) {

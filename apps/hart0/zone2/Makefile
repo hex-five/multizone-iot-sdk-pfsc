@@ -1,14 +1,16 @@
 # Copyright(C) 2020 Hex Five Security, Inc. - All Rights Reserved
 
-TARGET = zone2.elf
+TARGET := zone2.elf
 
-BSP_DIR := ../bsp
-NEWLIB_DIR := $(BSP_DIR)/newlib
+C_SRCS := main.c printf.c
 
 LINKER_SCRIPT := linker.ld
 
-C_SRCS += main.c printf.c
+TOP_DIR := $(abspath ../../..)
 
-INCLUDES += -I ../../../ext/multizone
+INCLUDES := -I$(TOP_DIR)/ext/multizone
 
+### BSP
+BSP_DIR := ../bsp
+NEWLIB_DIR := $(BSP_DIR)/newlib
 include $(NEWLIB_DIR)/newlib.mk

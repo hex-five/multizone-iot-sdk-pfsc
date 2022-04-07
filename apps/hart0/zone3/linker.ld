@@ -14,6 +14,7 @@ SECTIONS {
   __stack_size = DEFINED(__stack_size) ? __stack_size : 1K;
   PROVIDE(__stack_size = __stack_size);
 
+
   /** Init / Fini related code | run once - loaded in slower memory **/
 
   .init : ALIGN(64 / 8)

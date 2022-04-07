@@ -2,7 +2,7 @@
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754" moduleId="org.eclipse.cdt.core.settings" name="Default">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildProperties="" description="Microchip PolarFire SoC Icicle Kit - MultiZone TEE linked @0x08000000" id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+				<configuration artifactName="${ProjName}" buildProperties="" description="boot mode 0" id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754" name="Debug" parent="org.eclipse.cdt.build.core.emptycfg">
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754.1985812508" name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.634251780" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1567045129" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="riscv64-unknown-elf-" valueType="string"/>
@@ -26,17 +26,19 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/apps/hart0/bsp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/multizone}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/lwip/src/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/mbedtls/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/fatfs/source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/icicle-kit-es/platform_config}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/icicle-kit-es}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/pfsc-platform}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/pfsc-platform/platform_config_reference}&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.preprocessor.def.symbols.799802060" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_G5_SOC"/>
 									<listOptionValue builtIn="false" value="MSS_MAC_SIMPLE_TX_QUEUE"/>
 									<listOptionValue builtIn="false" value="GMAC=1"/>
 									<listOptionValue builtIn="false" value="MAC_ADDR={0x00,0xFC,0x00,0x12,0x34,0x56}"/>
+									<listOptionValue builtIn="false" value="NDEBUG"/>
+									<listOptionValue builtIn="false" value="BOOT_MODE=0"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2103622833" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -61,23 +63,85 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754.769018823">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754.769018823" moduleId="org.eclipse.cdt.core.settings" name="Production">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildProperties="" description="boot mode 1" id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754.769018823" name="Production" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="cdt.managedbuild.toolchain.gnu.cross.base.1828738754.769018823." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.520688631" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1219330425" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="riscv64-unknown-elf-" valueType="string"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.2145779215" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="${RISCV}/bin" valueType="string"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1680309773" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder id="cdt.managedbuild.builder.gnu.cross.1206686321" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.592340402" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.676191316" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/apps/hart0/bsp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/fatfs/source}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/multizone}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/icicle-kit-es}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/icicle-kit-es/platform_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/pfsc-platform}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/multizone-iot-sdk-pfsc/ext/pfsc-platform/platform_config_reference}&quot;"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.preprocessor.def.symbols.1268261518" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="TARGET_G5_SOC"/>
+									<listOptionValue builtIn="false" value="MSS_MAC_SIMPLE_TX_QUEUE"/>
+									<listOptionValue builtIn="false" value="GMAC=1"/>
+									<listOptionValue builtIn="false" value="MAC_ADDR={0x00,0xFC,0x00,0x12,0x34,0x56}"/>
+									<listOptionValue builtIn="false" value="NDEBUG"/>
+									<listOptionValue builtIn="false" value="BOOT_MODE=1"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1232095160" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.315390472" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1362736108" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
+								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1011414662" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.137652579" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.787459586" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1985636969" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.683325514" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="ext/mbedtls/library/net_sockets.c|ext/mbedtls/scripts|ext/mbedtls/3rdparty|ext/bare-metal-lib/examples/|ext/lwip/contrib/|ext/lwip/test/|ext/mbedtls/programs/|ext/mbedtls/tests/|ext/mbedtls/visualc/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="multizone-iot-sdk-pfsc.null.1365633377" name="multizone-iot-sdk-pfsc"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Production">
+			<resource resourceType="PROJECT" workspacePath="/multizone-iot-sdk-pfsc"/>
+		</configuration>
 		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/multizone-iot-sdk-pfsc"/>
+		</configuration>
+		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/multizone-iot-sdk-pfsc"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cross.base.1828738754;cdt.managedbuild.toolchain.gnu.cross.base.1828738754.1985812508;cdt.managedbuild.tool.gnu.cross.c.compiler.1516116749;cdt.managedbuild.tool.gnu.c.compiler.input.2103622833">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 		<buildTargets>
 			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
@@ -96,22 +160,23 @@
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
-			<target name="load-ram" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="load" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments>-j8</buildArguments>
-				<buildTarget>load-ram</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
-			</target>
-			<target name="load-rom" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments>-j8</buildArguments>
-				<buildTarget>load-rom</buildTarget>
+				<buildTarget>load</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
 		</buildTargets>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cross.base.1828738754;cdt.managedbuild.toolchain.gnu.cross.base.1828738754.1985812508;cdt.managedbuild.tool.gnu.cross.c.compiler.1516116749;cdt.managedbuild.tool.gnu.c.compiler.input.2103622833">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.cross.base.1828738754.769018823;cdt.managedbuild.toolchain.gnu.cross.base.1828738754.769018823.;cdt.managedbuild.tool.gnu.cross.c.compiler.592340402;cdt.managedbuild.tool.gnu.c.compiler.input.1232095160">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

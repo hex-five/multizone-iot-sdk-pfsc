@@ -44,16 +44,23 @@ static Inbox inbox[8] = {
         { .msg = "", .len = 0 },
 };
 
-int inbox_empty(void){
-	return (inbox[0].len==0 &&
-	        inbox[1].len==0 &&
-	        inbox[2].len==0 &&
-            inbox[3].len==0 &&
-	        inbox[4].len==0 &&
-            inbox[5].len==0 &&
-            inbox[6].len==0 &&
-            inbox[7].len==0
+int inbox_is_empty(void){
+
+    CSRC(mie, 1<<3);
+
+    const int empty = ( inbox[0].len==0 &&
+                        inbox[1].len==0 &&
+                        inbox[2].len==0 &&
+                        inbox[3].len==0 &&
+                        inbox[4].len==0 &&
+                        inbox[5].len==0 &&
+                        inbox[6].len==0 &&
+                        inbox[7].len==0
 	);
+
+    CSRS(mie, 1<<3);
+
+    return empty;
 }
 
 // ------------------------------------------------------------------------
@@ -156,7 +163,6 @@ __attribute__((interrupt())) void uart_isr(void) { // uart
 
 }
 __attribute__((interrupt())) void dma_isr(void)  { // dma
-
 #ifdef DMA_BASE
     write(1, "\e7\e[2K", 6);    // save curs pos & clear entire line
     printf("\rDMA transfer complete \n");
@@ -414,9 +420,9 @@ void print_pmp(void){
 }
 
 // ------------------------------------------------------------------------
-void msg_handler() {
+void msg_handler(void) {
 
-    CSRC(mie, 1 << 3);
+    CSRC(mie, 1<<3);
 
     for (Zone zone = zone1; zone <= zone8; zone++) {
 
@@ -429,6 +435,9 @@ void msg_handler() {
             if (strcmp("ping", msg) == 0) {
 
                 MZONE_SEND(zone, (char[16]){"pong"});
+
+            } else if (strcmp("restart", msg)==0){
+                asm ("j _start");
 
 			} else {
 
@@ -446,12 +455,12 @@ void msg_handler() {
 
     }
 
-    CSRS(mie, 1 << 3);
+    CSRS(mie, 1<<3);
 
 }
 
 // ------------------------------------------------------------------------
-void cmd_handler(){
+void cmd_handler(void){
 
 	char * tk[9]; tk[0] = strtok(inputline, " "); for (int i=1; i<9; i++) tk[i] = strtok(NULL, " ");
 
@@ -585,7 +594,7 @@ void cmd_handler(){
 }
 
 // ------------------------------------------------------------------------
-int readline() {
+int readline(void) {
 // ------------------------------------------------------------------------
 
 	static size_t p=0;
@@ -724,8 +733,10 @@ int main (void) {
     trap_vect[0] = trp_isr;
     trap_vect[3] = msi_isr;
     trap_vect[7] = tmr_isr;
-    trap_vect[DMA_IRQ] = dma_isr;
     trap_vect[UART_IRQ] = uart_isr;
+#ifdef DMA_BASE
+    trap_vect[DMA_IRQ] = dma_isr;
+#endif
 
     // register trap vector
     CSRW(mtvec, trap_vect); CSRS(mtvec, 1);
@@ -733,7 +744,9 @@ int main (void) {
     // enable interrupt sources
     CSRS(mie, 1<<3);
 	CSRS(mie, 1L<<UART_IRQ);
+#ifdef DMA_BASE
 	CSRS(mie, 1L<<DMA_IRQ);
+#endif
 
     // enable global interrupt
     CSRS(mstatus, 1<<3);
@@ -752,7 +765,7 @@ int main (void) {
     	// Inbox event handler
 		msg_handler();
 
-		if (buffer_empty() && inbox_empty())
+		if (buffer_empty() && inbox_is_empty())
 		    MZONE_WFI();
 		else
 			MZONE_YIELD();

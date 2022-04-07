@@ -30,7 +30,6 @@
 #if defined(MSS_MAC_DOCUMENTATION)
 #define MSS_MAC_UNH_TEST
 #endif
-#define MSS_MAC_UNH_TEST
 /***************************************************************************//**
  * This macro is normally defined at project level to select MPFS as the 
  * platform. The alternative is to define _TARGET_ALOE_ for the SiFive Aloe or

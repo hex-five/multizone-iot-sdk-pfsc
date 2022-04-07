@@ -213,7 +213,7 @@ _start:
     csrw mie, zero
     csrw mip, zero
 
-    j main
+    call main
 
 .LoopForeverOther:
     #in case of return, loop forever. nop's added so can be seen in debugger

@@ -31,6 +31,9 @@ int main (void){
                 if (strcmp("ping", msg) == 0)
                     MZONE_SEND(zone, (char[16]){"pong"});
 
+                else if (strcmp("restart", msg)==0)
+                    asm ("j _start");
+
 				/* test: wfi resume with global irq disabled - no irq taken */
                 else if (strcmp("mstatus.mie=0", msg)==0)
                     CSRC(mstatus, 1<<3);

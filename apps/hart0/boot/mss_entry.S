@@ -26,16 +26,16 @@ _start:
 
 u54:
 
-    #define CLINT_MSIP  0x02000000
-    #define ITIM_BASE   0x01800000
-    #define ITIM_OFFSET 0x00008000
+    #define CLINT_MSIP    0x02000000
+    #define U54_PROG_BASE 0x80000000 // DDR
+    #define U54_PROG_SIZE 0x04000000 // 64M
 
     # pause app cores
     csrw mstatus, zero; csrw mie, MIP_MSIP
 
     # reset msip
     la a1, CLINT_MSIP
-    slli t0, a0, 2
+    slli t0, a0, 2; addi a0, a0, -1
     add a1, t0, a1
  0: sw zero, (a1)
 
@@ -44,8 +44,8 @@ u54:
     # resume @itim
     fence.i
 
-    la t0, ITIM_BASE
-    li t1, ITIM_OFFSET
+    li t0, U54_PROG_BASE
+    li t1, U54_PROG_SIZE
     mul t1, t1, a0
     add t0, t0, t1
     ld t1, (t0); beqz t1, 0b
