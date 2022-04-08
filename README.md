@@ -81,11 +81,11 @@ _Note_: change SC_INSTALL_DIR and FPGENPROG according to your installation.
 
 build and load to ram for debug (boot mode 0):
 ```
-make && load
+make && make load
 ```
 build and load to flash for production (boot mode 1):
 ```
-make BOOT_MODE=1 && load BOOT_MODE=1
+make BOOT_MODE=1 && make load BOOT_MODE=1
 ```
 
 **eMMC flash setup**
