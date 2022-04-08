@@ -28,8 +28,8 @@ This repository is for the Microchip Icicle Kit board reference design [2021.02]
 - Verify that jumpers J34 and J43 are in position 2-3
 - Connect the power adapter to J29 and a micro USB cable to J33. Do NOT connect the ethernet port yet.
 - Turn on the power switch SW6. 
-- Program the Icicle board: FPExpress > Project > New job proj > Import > Job file : MPFS_ICICLE_KIT_BASE_DESIGN.job > Run
-Skip the installation instructions below and go directly to [MultiZone Reference Application](#multizone-reference-application)
+- Program the Icicle board: FPExpress > Project > New job proj > Import > Job file: MPFS_ICICLE_KIT_BASE_DESIGN.job > Run
+- Skip the instructions below and go directly to [MultiZone Reference Application](#multizone-reference-application)
 
 
 ### Installation ###
