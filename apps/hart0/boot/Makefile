@@ -14,7 +14,7 @@ ICICLE_KIT_ES_DIR := $(EXT_DIR)/icicle-kit-es
 MULTIZONE_DIR     := $(EXT_DIR)/multizone
 FATFS_SRC_DIR     := $(EXT_DIR)/fatfs/source
 
-INCLUDES := -I./ 
+INCLUDES := -I.
 INCLUDES += -I$(ICICLE_KIT_ES_DIR)
 INCLUDES += -I$(ICICLE_KIT_ES_DIR)/platform_config
 INCLUDES += -I$(PLATFORM_DIR)
