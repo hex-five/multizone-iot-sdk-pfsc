@@ -2,7 +2,7 @@
 
 TARGET := hart4.elf
 
-C_SRCS   := main.c
+C_SRCS   := main.c owi_sequence.c
 ASM_SRCS := mss_entry.S
 LINKER_SCRIPT := linker.ld
 
@@ -12,7 +12,7 @@ PLATFORM_DIR      := $(EXT_DIR)/pfsc-platform
 ICICLE_KIT_ES_DIR := $(EXT_DIR)/icicle-kit-es
 MULTIZONE_DIR     := $(EXT_DIR)/multizone
 
-CFLAGS += -DNDEBUG
+CFLAGS += -DNDEBUG -DMSS_USB_OTG_HOST_MODE
 
 INCLUDES += -I $(ICICLE_KIT_ES_DIR)
 INCLUDES += -I $(ICICLE_KIT_ES_DIR)/platform_config
@@ -20,22 +20,24 @@ INCLUDES += -I $(PLATFORM_DIR)
 INCLUDES += -I $(PLATFORM_DIR)/platform_config_reference
 INCLUDES += -I $(MULTIZONE_DIR)
 
-#C_SRCS += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/system_startup.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/newlib_stubs.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_clint.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_irq_handler_stubs.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_mtrap.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_plic.c
-C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_pmp.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_util.c
 C_SRCS += $(PLATFORM_DIR)/drivers/mss/mss_mmuart/mss_uart.c
+C_SRCS += $(PLATFORM_DIR)/drivers/mss/mss_usb/mss_usb_common_cif.c
+C_SRCS += $(PLATFORM_DIR)/drivers/mss/mss_usb/mss_usb_host.c
+C_SRCS += $(PLATFORM_DIR)/drivers/mss/mss_usb/mss_usb_host_cif.c
+C_SRCS += $(ICICLE_KIT_ES_DIR)/platform_config/drivers/mss/mss_usb/mss_usb_host_gen.c
 
 CFLAGS += -march=rv64gc -mabi=lp64d # g = imafd
 CFLAGS += -mcmodel=medany -msmall-data-limit=8
 CFLAGS += -mstrict-align -mno-save-restore
 CFLAGS += -ffunction-sections -fdata-sections -fsigned-char
 CFLAGS += -Wall -Wextra -Wstrict-prototypes -Wbad-function-cast
-CFLAGS += -Wno-unused-parameter #-Wno-maybe-uninitialized -Wno-unused-variable -Wno-unused-function -Wno-unused-but-set-variable #-Wno-array-bounds
+CFLAGS += -Wno-unused-parameter -Wno-pointer-to-int-cast -Wno-pointer-compare # MCHP code warnings
 CFLAGS += -O0 -g3 # MCHP Bug: anything but -O0 => GDB msg "The riscv_frame_cache's start_addr is ..."
 #CFLAGS += -Os -flto -msave-restore
 

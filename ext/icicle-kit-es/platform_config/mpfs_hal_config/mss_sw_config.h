@@ -1,3 +1,5 @@
+/* Modifications copyright (C) 2021 Hex Five Security, Inc. */
+
 /*******************************************************************************
  * Copyright 2019-2021 Microchip FPGA Embedded Systems Solutions.
  *
@@ -5,11 +7,7 @@
  *
  * MPFS HAL Embedded Software
  *
- * Modifications copyright (C) 2021 Hex Five Security, Inc.
- *
  */
-
-/* Modifications copyright (C) 2021 Hex Five Security, Inc. */
 
 /*******************************************************************************
  *
@@ -118,11 +116,11 @@
 /* define the required tick rate in Milliseconds */
 /* if this program is running on one hart only, only that particular hart value
  * will be used */
-#define HART0_TICK_RATE_MS  5UL
-#define HART1_TICK_RATE_MS  5UL
-#define HART2_TICK_RATE_MS  5UL
-#define HART3_TICK_RATE_MS  5UL
-#define HART4_TICK_RATE_MS  5UL
+#define HART0_TICK_RATE_MS  1UL
+#define HART1_TICK_RATE_MS  1UL
+#define HART2_TICK_RATE_MS  1UL
+#define HART3_TICK_RATE_MS  1UL
+#define HART4_TICK_RATE_MS  1UL
 
 /*
  * Define the size of the Hart Local Storage (HLS).

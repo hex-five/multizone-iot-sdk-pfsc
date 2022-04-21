@@ -1,7 +1,4 @@
-/*******************************************************************************
- * See LICENSE for license details.
- * Modifications copyright (C) 2021 Hex Five Security, Inc.
- */
+/* Modifications copyright (C) 2021 Hex Five Security, Inc. */
 
 /*******************************************************************************
  * @file entry.S
@@ -16,6 +13,7 @@
 #include "mpfs_hal/startup_gcc/system_startup_defs.h"
 #include "mpfs_hal_config/mss_sw_config.h"
 
+    .section .text.init
     .globl reset_vector
     .globl _start
 
@@ -24,11 +22,13 @@ _start:
 
     csrr a0, mhartid; beqz a0, e51
 
+# -----------------------------------------------------------------------------
 u54:
+# -----------------------------------------------------------------------------
 
-    #define CLINT_MSIP    0x02000000
-    #define U54_PROG_BASE 0x80000000 // DDR
-    #define U54_PROG_SIZE 0x04000000 // 64M
+    #define CLINT_MSIP      0x02000000
+    .extern hart1_prog      # DDR @0x8000_0000
+    .extern hart1_prog_len  # 64M
 
     # pause app cores
     csrw mstatus, zero; csrw mie, MIP_MSIP
@@ -44,14 +44,17 @@ u54:
     # resume @itim
     fence.i
 
-    li t0, U54_PROG_BASE
-    li t1, U54_PROG_SIZE
+    la t0, hart1_prog       #U54_PROG_BASE
+    la t1, hart1_prog_len   #U54_PROG_SIZE
     mul t1, t1, a0
     add t0, t0, t1
     ld t1, (t0); beqz t1, 0b
     jr (t0)
 
+# -----------------------------------------------------------------------------
 e51:
+# -----------------------------------------------------------------------------
+
     # clear the Return Address Stack
     call .clear_ras
     li a1, 0x3

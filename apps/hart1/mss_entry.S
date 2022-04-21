@@ -16,6 +16,9 @@
 #include "mpfs_hal/startup_gcc/system_startup_defs.h"
 #include "mpfs_hal_config/mss_sw_config.h"
 
+    #.option norvc
+    .section .text.init
+    .globl reset_vector
   .globl _start
 
 reset_vector:

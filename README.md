@@ -24,7 +24,7 @@ This repository is for the Microchip Icicle Kit board reference design [2021.02]
 ### Quick Start ###
 
 - Download and install [Microsemi Flash Programmer](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
-- Download and unzip the release asset [Icicle-Kit-2021.11-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.5/Icicle-Kit-2021.11-Trusted-Firmware.zip)
+- Download and unzip the release asset [Icicle-Kit-2021.11-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.6/Icicle-Kit-2021.11-Trusted-Firmware.zip)
 - Verify that jumpers J34 and J43 are in position 2-3
 - Connect the power adapter to J29 and a micro USB cable to J33. Do NOT connect the ethernet port yet.
 - Turn on the power switch SW6. 
@@ -100,7 +100,7 @@ For this to work make sure that:
 _Note_: the eMMC flash is likely to work out-of-the-box without any intervention as it should ship preformatted with one FAT boot partition. If you run into any issues with the eMMC, follow these [instructions](https://github.com/polarfire-soc/polarfire-soc-documentation/blob/master/boards/mpfs-icicle-kit-es/updating-icicle-kit/updating-icicle-kit-design-and-linux.md#eMMC) or drop us a note at [info@hex-five-com](mailto:info@hex-five-com).
 
 
-### MultiZone Reference application ###
+### MultiZone Reference Application ###
 
 **First boot - Automatic system update**
 
@@ -165,7 +165,7 @@ Z3 > pong
 ```
 For a detailed explanation of all the features of the MultiZone Reference Application see [MultiZone Security Reference Manual](https://github.com/hex-five/multizone-iot-sdk-pfsc/tree/master/ext/multizone/manual.pdf)
 
-**Secure Remote Access via Mutually Authenticated TLS/MQTT - Ethernet connection**  
+**Secure Remote Access via Mutually Authenticated MQTT/TLS - Ethernet connection**  
 
 Connect the ethernet port J2 to an Internet router
 
@@ -186,7 +186,7 @@ Z1 > mqtt: connected TLSv1.2
 ```
 Take note of your unique mqtt client id - mzone-50b26099 in the example above. You will need it to interact with the target via MQTT messages published and subscribed to the subtopics mzone-xxxxxxxx/. The MQTT client id is derived from the PolarFire SoC Device Serial Number and unique to your Icicle Kit.
 
-**Telemetry - Send and Receive TLS/MQTT Messages**
+**Telemetry - Send and Receive MQTT/TLS Messages**
 
 In the following examples replace ```mzone-xxxxxxxx``` with your unique client id.
 
@@ -194,20 +194,20 @@ In a new terminal console, subscribe (listen) to all topics for your device:
 ```
 cd multizone-iot-sdk-pfsc
 CLIENT_ID=mzone-xxxxxxxx
-alias mosquitto_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
-mosquitto_sub -t $CLIENT_ID/# -v
+alias mqtt_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
+mqtt_sub -t $CLIENT_ID/# -v
 ```
 In a new terminal console, publish (send) MQTT messages to the subtopics mapped to zones:
 ```
 cd multizone-iot-sdk-pfsc
 CLIENT_ID=mzone-xxxxxxxx
-alias mosquitto_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
+alias mqtt_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
 
-mosquitto_pub -t $CLIENT_ID/zone1 -m ping
-mosquitto_pub -t $CLIENT_ID/zone2 -m ping
-mosquitto_pub -t $CLIENT_ID/zone3 -m ping
-mosquitto_pub -t $CLIENT_ID/zone4 -m ping
-mosquitto_pub -t $CLIENT_ID/zone2 -m MultiZone
+mqtt_pub -t $CLIENT_ID/zone1 -m ping
+mqtt_pub -t $CLIENT_ID/zone2 -m ping
+mqtt_pub -t $CLIENT_ID/zone3 -m ping
+mqtt_pub -t $CLIENT_ID/zone4 -m ping
+mqtt_pub -t $CLIENT_ID/zone2 -m Hex-Five!
 ```
 
 **Remote Firmware Updates**
@@ -215,13 +215,14 @@ mosquitto_pub -t $CLIENT_ID/zone2 -m MultiZone
 Remotely deploy new firmware to hart #1 in zone #5:
 
 ```
-mosquitto_pub -t $CLIENT_ID/hart1.bin -f apps/hart1/hart1.bin
+mqtt_pub -t $CLIENT_ID/hart1.bin -f apps/hart1/hart1.bin
+mqtt_pub -t $CLIENT_ID/zone1 -m reboot
 ```
 
 On your computer, start a new serial terminal console (GtkTerm) and connect to /dev/ttyUSB1 at 115200-8-N-1.
 ```
-mosquitto_pub -t $CLIENT_ID/zone5 -m ping
-mosquitto_pub -t $CLIENT_ID/zone5 -m Microchip!
+mqtt_pub -t $CLIENT_ID/zone5 -m ping
+mqtt_pub -t $CLIENT_ID/zone5 -m Microchip!
 ```
 Observe the newly deployed firmware running on hart #1 (Zone 5) and connected to the local UART /dev/ttyUSB1
 
@@ -242,14 +243,43 @@ Z1 > Microchip!
 
 H1 > Commands: load store exec send recv pmp 
 ```
-Optional: repeat with hart #2 in Zone 6 (/dev/ttyUSB2), hart #3 in Zone 7 (/dev/ttyUSB3), and hart #4 in Zone 8.
+Repeat with hart #2 in zone6 (/dev/ttyUSB2), hart #3 in zone7 (/dev/ttyUSB3), and hart #4 in zone8.
+
+
+### Optional: Robot Application ###
+
+This SDK includes a typical industrial control application for the [OWI-535 Robotic Arm](https://owirobot.com/robotic-arm-edge/). Robot commands and status can be sent and received via local console or remotely via the mqtt topic mapped to zone8 (hart #4). For more information about robot setup and operations see the section "Robot Operations" in the [MultiZone Manual.](https://github.com/hex-five/multizone-sdk-pfsc/blob/master/ext/multizone/manual.pdf)
+
+Deploy the robot application to hart #4 
+```
+mqtt_pub -t $CLIENT_ID/hart4.bin -f apps/hart4/hart4.bin
+mqtt_pub -t $CLIENT_ID/zone1 -m reboot
+```
+close jumper J17 (USB 5V)
+
+connect the OWI-535 usb cable to the Icicle Kit micro USB port J16 - you may need a USB OTG cable or adapter
+
+turn on the robot power switch
+
+observe the status message broadcasted to local terminal (zone2) and remote broker (zone1)
+```
+mzone-50b26099/zone8 USB CONNECT
+```
+remotely start the pre-programmed sequence
+```
+mqtt_pub -t $CLIENT_ID/zone8 -m start
+```
+remotely stop the robot sequence
+```
+mqtt_pub -t $CLIENT_ID/zone8 -m stop
+```
 
 
 ### Optional: Eclipse CDT Project ###
 
 This repository includes a complete Eclipse CDT project for developers familiar with the Eclipse IDE. No additional plugins or 3rd party components are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended to debug over OpenOCD/JTAG. 
 
-_Note_: Microchip SoftConsole users may prefer this version of the project [SoftConsole-2021.3-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.5/SoftConsole-2021.3-Trusted-Firmware.zip). This version doesn't include the git repo and provides the fully populated file tree ready to go, with all dependencies and patches applied. It is recommended to import this project into a new workspace separate from Microchip stock extras/workspace.examples.   
+_Note_: Microchip SoftConsole users may prefer this version of the project [SoftConsole-2021.3-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.6/SoftConsole-2021.3-Trusted-Firmware.zip). This version doesn't include the git repo and provides the fully populated file tree ready to go, with all dependencies and patches applied. It is recommended to import this project into a new workspace separate from Microchip stock extras/workspace.examples.
 
 **Eclipse project Setup**
 

@@ -1,37 +1,37 @@
 CLIENT_ID=mzone-00000000
 
-alias mosquitto_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
-alias mosquitto_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
+alias mqtt_sub='mosquitto_sub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
+alias mqtt_pub='mosquitto_pub --host mqtt-broker.hex-five.com --cafile pki/hexfive-ca.crt --cert pki/test.crt --key pki/test.key'
 
-mosquitto_sub -t $CLIENT_ID/# -v
+mqtt_sub -t $CLIENT_ID/# -v
 
-mosquitto_pub -t $CLIENT_ID/zone1 -m ping
-mosquitto_pub -t $CLIENT_ID/zone2 -m ping
-mosquitto_pub -t $CLIENT_ID/zone3 -m ping
-mosquitto_pub -t $CLIENT_ID/zone4 -m ping
+mqtt_pub -t $CLIENT_ID/zone1 -m ping
+mqtt_pub -t $CLIENT_ID/zone2 -m ping
+mqtt_pub -t $CLIENT_ID/zone3 -m ping
+mqtt_pub -t $CLIENT_ID/zone4 -m ping
 
-mosquitto_pub -t $CLIENT_ID/hart1.bin -f apps/hart1/hart1.bin
-mosquitto_pub -t $CLIENT_ID/hart2.bin -f apps/hart2/hart2.bin
-mosquitto_pub -t $CLIENT_ID/hart3.bin -f apps/hart3/hart3.bin
-mosquitto_pub -t $CLIENT_ID/hart4.bin -f apps/hart4/hart4.bin
+mqtt_pub -t $CLIENT_ID/hart1.bin -f apps/hart1/hart1.bin
+mqtt_pub -t $CLIENT_ID/hart2.bin -f apps/hart2/hart2.bin
+mqtt_pub -t $CLIENT_ID/hart3.bin -f apps/hart3/hart3.bin
+mqtt_pub -t $CLIENT_ID/hart4.bin -f apps/hart4/hart4.bin
 
-mosquitto_pub -t $CLIENT_ID/zone1 -m reboot
+mqtt_pub -t $CLIENT_ID/zone1 -m reboot
 
-mosquitto_pub -t $CLIENT_ID/zone5 -m ping
-mosquitto_pub -t $CLIENT_ID/zone6 -m ping
-mosquitto_pub -t $CLIENT_ID/zone7 -m ping
-mosquitto_pub -t $CLIENT_ID/zone8 -m ping
+mqtt_pub -t $CLIENT_ID/zone5 -m ping
+mqtt_pub -t $CLIENT_ID/zone6 -m ping
+mqtt_pub -t $CLIENT_ID/zone7 -m ping
+mqtt_pub -t $CLIENT_ID/zone8 -m ping
 
-mosquitto_pub -t $CLIENT_ID/zone1.bin -n
-mosquitto_pub -t $CLIENT_ID/zone2.bin -n
-mosquitto_pub -t $CLIENT_ID/zone3.bin -n
-mosquitto_pub -t $CLIENT_ID/zone4.bin -n
-mosquitto_pub -t $CLIENT_ID/hart1.bin -n
-mosquitto_pub -t $CLIENT_ID/hart2.bin -n
-mosquitto_pub -t $CLIENT_ID/hart3.bin -n
-mosquitto_pub -t $CLIENT_ID/hart4.bin -n
+mqtt_pub -t $CLIENT_ID/zone1.bin -n
+mqtt_pub -t $CLIENT_ID/zone2.bin -n
+mqtt_pub -t $CLIENT_ID/zone3.bin -n
+mqtt_pub -t $CLIENT_ID/zone4.bin -n
+mqtt_pub -t $CLIENT_ID/hart1.bin -n
+mqtt_pub -t $CLIENT_ID/hart2.bin -n
+mqtt_pub -t $CLIENT_ID/hart3.bin -n
+mqtt_pub -t $CLIENT_ID/hart4.bin -n
 
-mosquitto_pub -t $CLIENT_ID/zone1 -m reboot
+mqtt_pub -t $CLIENT_ID/zone1 -m reboot
 
 
 

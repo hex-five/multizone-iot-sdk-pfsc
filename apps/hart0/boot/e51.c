@@ -41,29 +41,7 @@ const FW_IMAGE fw_image[] = {
     {"hart4.bin", (uint64_t* const)(&hart4_prog), (const uint64_t)&hart4_prog_len},
 };
 
-/* ------------------------------------------------------------------------- */
-FRESULT f_load(FW_IMAGE fw, FIL *f_file) {
-/* ------------------------------------------------------------------------- */
-
-    FRESULT f_result = f_open(f_file, fw.file_name, FA_READ);
-
-    if (f_result == FR_OK && f_size(f_file) > 0 && f_size(f_file) <= fw.load_size) {
-
-        /* Eval version: lock down zone1 (keep eNVM img & ignore eMMC bin */
-        if (strcmp(fw.file_name, "zone1.bin") != 0){
-
-            unsigned bytes_read;
-            f_result = f_read(f_file, (void*) fw.load_addr, f_size(f_file), &bytes_read);
-
-        }
-
-    }
-
-    f_close(f_file);
-
-    return f_result;
-
-}
+FRESULT f_load(FW_IMAGE fw, FIL *f_file);
 
 /* ------------------------------------------------------------------------- */
 void e51(void) {
@@ -101,10 +79,16 @@ void e51(void) {
     SYSREG->MSSIO_BANK4_IO_CFG_10_11_CR = LIBERO_SETTING_MSSIO_BANK4_IO_CFG_10_11_CR_eMMC;
     SYSREG->MSSIO_BANK4_IO_CFG_12_13_CR = LIBERO_SETTING_MSSIO_BANK4_IO_CFG_12_13_CR_eMMC;
 
-    /* Init PLIC & enable irqs*/
-    PLIC_init();
+    /* Init PLIC for all harts & enable e51 interrupts */
+    PLIC_init(0); /* hart_id = 0 */
+    PLIC_init(4); /* hart_id = 4 */
+
+    PLIC_SetPriority(USB_DMA_PLIC, 2);
+    PLIC_SetPriority(USB_MC_PLIC, 2);
+
     PLIC_SetPriority(MMC_main_PLIC, 3);
     PLIC_SetPriority(MMC_wakeup_PLIC, 3);
+
     __enable_irq();
 
     /* Copy lower 32 bits of the Device Serial Number in TEMP0 - zone1 mqtt_id & random */
@@ -243,5 +227,29 @@ uint8_t init_pmp(uint8_t hart_id) {
 
   //pmp_configure(hart_id);
     return (0U);
+}
+
+/* ------------------------------------------------------------------------- */
+FRESULT f_load(FW_IMAGE fw, FIL *f_file) {
+/* ------------------------------------------------------------------------- */
+
+    FRESULT f_result = f_open(f_file, fw.file_name, FA_READ);
+
+    if (f_result == FR_OK && f_size(f_file) > 0 && f_size(f_file) <= fw.load_size) {
+
+        /* Eval version: lock down zone1 (keep eNVM img & ignore eMMC bin */
+        if (strcmp(fw.file_name, "zone1.bin") != 0){
+
+            unsigned bytes_read;
+            f_result = f_read(f_file, (void*) fw.load_addr, f_size(f_file), &bytes_read);
+
+        }
+
+    }
+
+    f_close(f_file);
+
+    return f_result;
+
 }
 

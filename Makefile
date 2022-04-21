@@ -64,13 +64,6 @@ ifeq ($(BOOT_MODE),0)
 		apps/hart0/zone3/zone3.hex \
 		apps/hart0/zone4/zone4.hex \
 
-#	@srec_cat -o firmware.hex -I \
-#				firmware.hex -I \
-#				apps/hart1/hart1.hex -I \
-#				apps/hart2/hart2.hex -I \
-#				apps/hart3/hart3.hex -I \
-#				apps/hart4/hart4.hex -I \
-
 else ifeq ($(BOOT_MODE),1)
 
 	$(MAKE) -C ext/icicle-kit-es
