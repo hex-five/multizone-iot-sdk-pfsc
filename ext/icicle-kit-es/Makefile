@@ -11,9 +11,9 @@ all: $(SOC_CONF_DIR)
 
 $(SOC_CONF_DIR):
     # MCHP Bug - mpfs_configuration_generator.py v2021.11: xml file name ignored unless in current folder
-	$(info mpfs_configuration_generator.py ICICLE_MSS_cfg.xml ...)
+	$(info mpfs_configuration_generator.py MPFS_Icicle_MSS_Baremetal.xml ...)
 	cd $(SOC_CONF_XML_DIR); \
-	python3 $(SOC_CONF_GEN_DIR)/mpfs_configuration_generator.py ICICLE_MSS_cfg.xml $(ICICLE_KIT_ES_DIR) 
+	python3 $(SOC_CONF_GEN_DIR)/mpfs_configuration_generator.py MPFS_Icicle_MSS_Baremetal.xml $(ICICLE_KIT_ES_DIR) 
 
 .PHONY: clean
 clean:
