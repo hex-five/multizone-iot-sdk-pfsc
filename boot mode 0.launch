@@ -5,9 +5,6 @@
         <mapEntry key="FPGENPROG" value="${env_var:HOME}/microsemi/Program_Debug_v2021.3/Program_Debug_Tool/bin64/fpgenprog"/>
         <mapEntry key="SC_INSTALL_DIR" value="${env_var:HOME}/microsemi/SoftConsole-v2021.3-7.0.0.599"/>
     </mapAttribute>
-    <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
-        <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
-    </listAttribute>
     <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_INCLUDE_REFERENCED_PROJECTS" value="false"/>
     <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LAUNCH_CONFIGURATION_BUILD_SCOPE" value="${none}"/>
     <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="/bin/java"/>

@@ -18,13 +18,13 @@ This version of the MultiZone Secure IoT Firmware works with the following devel
 
 - [Microchip PolarFire SoC FPGA Icicle Kit](https://www.microsemi.com/existing-parts/parts/152514)
 
-This repository is for the Microchip Icicle Kit board reference design [2022.03](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.03), [2021.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.02), [2021.04](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.04), [2021.08](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.08), [2021.11](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.11)
+This repository is for the Microchip Icicle Kit board reference design [2022.05](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.05), [2022.03](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.03), [2021.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.02), [2021.04](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.04), [2021.08](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.08), [2021.11](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.11)
 
 
 ### Quick Start ###
 
 - Download and install [Microsemi Flash Programmer](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
-- Download and unzip the release asset [Icicle-Kit-2021.11-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.6/Icicle-Kit-2021.11-Trusted-Firmware.zip)
+- Download and unzip the release asset [Icicle-Kit-2022.05-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.7/Icicle-Kit-2022.05-Trusted-Firmware.zip)
 - Verify that jumpers J34 and J43 are in position 2-3
 - Connect the power adapter to J29 and a micro USB cable to J33. Do NOT connect the ethernet port yet.
 - Turn on the power switch SW6. 
@@ -179,12 +179,12 @@ Z1 > dns: mqtt-broker.hex-five.com 54.177.73.90
 
 Z1 > sntp: 04/01/2022 00:54:53 GMT
  
-Z1 > mqtt: client id mzone-50b26099 
+Z1 > mqtt: client id mzone-50c26099 
  
 Z1 > mqtt: connected TLSv1.2
 
 ```
-Take note of your unique mqtt client id - mzone-50b26099 in the example above. You will need it to interact with the target via MQTT messages published and subscribed to the subtopics mzone-xxxxxxxx/. The MQTT client id is derived from the PolarFire SoC Device Serial Number and unique to your Icicle Kit.
+Take note of your unique mqtt client id - mzone-50c26099 in the example above. You will need it to interact with the target via MQTT messages published and subscribed to the subtopics mzone-xxxxxxxx/. The MQTT client id is derived from the PolarFire SoC Device Serial Number and unique to your Icicle Kit.
 
 **Telemetry - Send and Receive MQTT/TLS Messages**
 
@@ -263,7 +263,7 @@ turn on the robot power switch
 
 observe the status message broadcasted to local terminal (zone2) and remote broker (zone1)
 ```
-mzone-50b26099/zone8 USB CONNECT
+mzone-50c26099/zone8 USB CONNECT
 ```
 remotely start the pre-programmed sequence
 ```
@@ -279,7 +279,7 @@ mqtt_pub -t $CLIENT_ID/zone8 -m stop
 
 This repository includes a complete Eclipse CDT project for developers familiar with the Eclipse IDE. No additional plugins or 3rd party components are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended to debug over OpenOCD/JTAG. 
 
-_Note_: Microchip SoftConsole users may prefer this version of the project [SoftConsole-2021.3-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.6/SoftConsole-2021.3-Trusted-Firmware.zip). This version doesn't include the git repo and provides the fully populated file tree ready to go, with all dependencies and patches applied. It is recommended to import this project into a new workspace separate from Microchip stock extras/workspace.examples.
+_Note_: Microchip SoftConsole users may prefer this version of the project [SoftConsole-2021.3-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.7/SoftConsole-2021.3-Trusted-Firmware.zip). This version doesn't include the git repo and provides the fully populated file tree ready to go, with all dependencies and patches applied. It is recommended to import this project into a new workspace separate from Microchip stock extras/workspace.examples.
 
 **Eclipse project Setup**
 
@@ -317,7 +317,7 @@ Debug:
 Run > Debug configurations > multizone-iot-sdk-pfsc > Debug
 ```
 
-![alt text](https://hex-five.com/wp-content/uploads/multizone-eclipse-proj.png)
+![alt text](https://hex-five.com/wp-content/uploads/multizone-iot-sdk-pfsc-eclipse-proj.png)
 
 
 ### Legalities ###

@@ -15,7 +15,7 @@ CFLAGS += -march=rv64imac -mabi=lp64
 CFLAGS += -mcmodel=medany -msmall-data-limit=8
 CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -Wall -Wextra -Wstrict-prototypes -Wbad-function-cast
-CFLAGS += -Wno-maybe-uninitialized -Wno-parentheses -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable # -Wno-array-bounds
+CFLAGS += -Wno-maybe-uninitialized -Wno-parentheses -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-result # -Wno-array-bounds
 
 CFLAGS += -DBOOT_MODE=$(BOOT_MODE)
 
