@@ -18,13 +18,13 @@ This version of the MultiZone Secure IoT Firmware works with the following devel
 
 - [Microchip PolarFire SoC FPGA Icicle Kit](https://www.microsemi.com/existing-parts/parts/152514)
 
-This repository is for the Microchip Icicle Kit board reference design [2022.05](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.05), [2022.03](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.03), [2021.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.02), [2021.04](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.04), [2021.08](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.08), [2021.11](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.11)
+This repository is for the Microchip Icicle Kit board reference design [2023.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2023.02), [2022.05](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.05), [2022.03](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/v2022.03), [2021.02](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.02), [2021.04](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.04), [2021.08](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.08), [2021.11](https://github.com/polarfire-soc/icicle-kit-reference-design/releases/tag/2021.11)
 
 
 ### Quick Start ###
 
-- Download and install [Microsemi Flash Programmer](https://download-soc.microsemi.com/FPGA/v2021.3/prod/Program_Debug_v2021.3_lin.bin)
-- Download and unzip the release asset [Icicle-Kit-2022.05-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.7/Icicle-Kit-2022.05-Trusted-Firmware.zip)
+- Download and install [Microsemi Flash Programmer](https://ww1.microchip.com/downloads/secure/aemDocuments/documents/FPGA/media-content/FPGA/v2022-3/prod/Program_Debug_v2022.3_lin.zip)
+- Download and unzip the release asset [Icicle-Kit-2023.02-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.8/Icicle-Kit-2023.02-Trusted-Firmware.zip)
 - Verify that jumpers J34 and J43 are in position 2-3
 - Connect the power adapter to J29 and a micro USB cable to J33. Do NOT connect the ethernet port yet.
 - Turn on the power switch SW6. 
@@ -34,7 +34,7 @@ This repository is for the Microchip Icicle Kit board reference design [2022.05]
 
 ### Installation ###
 
-This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11.2 and Ubuntu 20.04. Other Linux distros are similar. Windows developers may want to install Windows Subsystem for Linux or a Linux emulation environment like MYSYS2/MinGW64. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
+This SDK works with any versions of Linux, Windows, and Mac capable of running Java 1.8 or greater. The directions in this readme have been carefully verified with fresh installations of Debian 11 and Ubuntu 20. Other Linux distros are similar. Windows developers may want to install Windows Subsystem for Linux or a Linux emulation environment like MYSYS2/MinGW64. Hex Five's precompiled toolchain and openOCD for Windows are available at https://hex-five.com/download/
 
 **Linux prerequisites**
 
@@ -56,11 +56,11 @@ Reboot or run ```sudo udevadm trigger```
 
 **Microchip prerequisites**
 
-- [Microsemi Flash Programmer](https://www.microsemi.com/product-directory/programming-and-debug/4977-flashpro)
+- [Microsemi Flash Programmer](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/programming-and-debug/flashpro-and-flashpro-express)
 
 _Note_: Microchip FlashPro Software is optional and only required to boot MultiZone firmware from the PolarFire SoC eNVM memory. It is not required to build, load, debug, and run the firmware in ram. Alternatively, the FPExpress software can be downloaded as part of Microchip Libero SoC suite. 
 
-- [Microchip SoftConsole (RISC-V Toolchain and OpenOCD)](https://www.microsemi.com/product-directory/design-tools/4879-softconsole#downloads)
+- [Microchip SoftConsole (RISC-V Toolchain, GDB, OpenOCD)](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/soc-fpga/softconsole)
 
 _Note_: the SoftConsole software is neededed only to provide the RISC-V Toolchain and the OpenOCD folders. It is not required to build, load, debug, and run the MultiZone Firmware. Alternatively, you can build and debug MultiZone Firmware from the command line with Makefile and GDB or you can use your own Eclipse installation with the Eclipse CDT project incuded in this repo - see [Eclipse CDT Project](#optional-eclipse-cdt-project).   
 
@@ -72,8 +72,8 @@ cd multizone-iot-sdk-pfsc
 git apply -p1 ext/pfsc-platform.patch --directory=ext/pfsc-platform
 ```
 ```
-export SC_INSTALL_DIR=~/Microchip/SoftConsole-v2021.3-7.0.0.599
-export FPGENPROG=~/microsemi/Program_Debug_v2021.3/Program_Debug_Tool/bin64/fpgenprog
+export SC_INSTALL_DIR=~/Microchip/SoftConsole-v2022.2-RISC-V-747
+export FPGENPROG=~/microsemi/Program_Debug_v2022.3/Program_Debug_Tool/bin64/fpgenprog
 export RISCV=$SC_INSTALL_DIR/riscv-unknown-elf-gcc
 export OPENOCD=$SC_INSTALL_DIR/openocd
 ```
@@ -97,7 +97,7 @@ For this to work make sure that:
 - the eMMC drive is partitioned with at least one volume formatted FAT or exFAT
 - the FAT/exFAT file system is writable and has at least 256KB of free space available
 
-_Note_: the eMMC flash is likely to work out-of-the-box without any intervention as it should ship preformatted with one FAT boot partition. If you run into any issues with the eMMC, follow these [instructions](https://github.com/polarfire-soc/polarfire-soc-documentation/blob/master/boards/mpfs-icicle-kit-es/updating-icicle-kit/updating-icicle-kit-design-and-linux.md#eMMC) or drop us a note at [info@hex-five-com](mailto:info@hex-five-com).
+_Note_: the eMMC flash is likely to work out-of-the-box without any intervention as it should ship preformatted with one FAT boot partition. If you run into any issues with the eMMC, follow these [instructions](https://github.com/polarfire-soc/polarfire-soc-documentation/blob/master/reference-designs-fpga-and-development-kits/updating-mpfs-kit.md#emmc-content-update-procedure) or drop us a note at [info@hex-five-com](mailto:info@hex-five-com).
 
 
 ### MultiZone Reference Application ###
@@ -108,7 +108,7 @@ Connect the ethernet port J2 to an Internet router, or to your computer if Inter
 
 The first time the Trusted Firmware boots, it connects to Hex Five's release server to pull firmware updates. Pay attention to the green leds near the ethernet port. They should blink briefly upon establishing link connections and while downloading the system updates. Depending on the speed of your Internet connection, after a few seconds the system will reboot automatically and the red led LED2 will start blinking to indicate normal system activity.
 
-**Local Access via UART - No ethernet connection**
+**Local Access via UART - No ethernet connection required**
 
 Linux users: make sure you have access rights to the USB port connected to the Icicle Kit - see [Linux prereqs](#udev-rules)
 
@@ -165,7 +165,7 @@ Z3 > pong
 ```
 For a detailed explanation of all the features of the MultiZone Reference Application see [MultiZone Security Reference Manual](https://github.com/hex-five/multizone-iot-sdk-pfsc/tree/master/ext/multizone/manual.pdf)
 
-**Secure Remote Access via Mutually Authenticated MQTT/TLS - Ethernet connection**  
+**Secure Remote Access via Mutually Authenticated MQTT/TLS - Ethernet connection required**  
 
 Connect the ethernet port J2 to an Internet router
 
@@ -277,13 +277,13 @@ mqtt_pub -t $CLIENT_ID/zone8 -m stop
 
 ### Optional: Eclipse CDT Project ###
 
-This repository includes a complete Eclipse CDT project for developers familiar with the Eclipse IDE. No additional plugins or 3rd party components are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended to debug over OpenOCD/JTAG. 
+This repository includes a complete Eclipse CDT project for developers familiar with the Eclipse IDE. No additional plugins or 3rd party components are required to build and upload MultiZone to the target. The [OpenOCD debugging plug-in](https://eclipse-embed-cdt.github.io/debug/openocd) is optional and recommended to debug via OpenOCD/JTAG. 
 
-_Note_: Microchip SoftConsole users may prefer this version of the project [SoftConsole-2021.3-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.7/SoftConsole-2021.3-Trusted-Firmware.zip). This version doesn't include the git repo and provides the fully populated file tree ready to go, with all dependencies and patches applied. It is recommended to import this project into a new workspace separate from Microchip stock extras/workspace.examples.
+_Note_: Microchip SoftConsole users may prefer this version of the project [SoftConsole-2022.2-Trusted-Firmware.zip](https://github.com/hex-five/multizone-iot-sdk-pfsc/releases/download/v2.2.8/SoftConsole-2022.2-Trusted-Firmware.zip). This version doesn't include the git repo and provides the fully populated file tree ready to go, with all dependencies and patches applied. It is recommended to import this project into a new workspace separate from Microchip stock extras/workspace.examples.
 
 **Eclipse project Setup**
 
-Optional: Install a fresh copy of [Eclipse CDT 10.5.0 for Eclipse 2021-12](https://www.eclipse.org/cdt/downloads.php):
+Optional: Install a fresh copy of [Eclipse CDT 10.7 for Eclipse 2022-09](https://www.eclipse.org/cdt/downloads.php):
 
 Optional: install the OpenOCD debugging plugin
 ```
@@ -300,8 +300,8 @@ files > Open project from file system > Finish
 Configure Microchip dependencies FPGENPROG and SC_INSTALL_DIR according to your installation
 ```
 Project > properties > C/C++ > Build > Environment
-FPGENPROG ${HOME}/microsemi/Program_Debug_v2021.3/Program_Debug_Tool/bin64/fpgenprog
-SC_INSTALL_DIR ${HOME}/Microchip/SoftConsole-v2021.3-7.0.0.599
+FPGENPROG ${HOME}/microsemi/Program_Debug_v2022.3/Program_Debug_Tool/bin64/fpgenprog
+SC_INSTALL_DIR ${HOME}/Microchip/SoftConsole-v2022.2-RISC-V-747
 ```
 Select the project profile: debug (ram / boot mode 0) or production (envm / boot mode 1)
 ```
