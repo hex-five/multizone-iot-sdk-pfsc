@@ -154,6 +154,7 @@ void e51(void) {
 /* ------------------------------------------------------------------------- */
 int main_first_hart(HLS_DATA* hls) {
 /* ------------------------------------------------------------------------- */
+    /* override weak ref in ext/pfsc-platform/mpfs_hal/startup_gcc/system_startup.c*/
     uint64_t hartid = read_csr(mhartid);
 
     if(hartid == MPFS_HAL_FIRST_HART)
@@ -183,6 +184,7 @@ int main_first_hart(HLS_DATA* hls) {
         (void)init_mem_protection_unit();
         (void)init_pmp((uint8_t)MPFS_HAL_FIRST_HART);
         (void)mss_set_apb_bus_cr((uint32_t)LIBERO_SETTING_APBBUS_CR);
+        (void)mss_set_gpio_interrupt_fab_cr((uint32_t)LIBERO_SETTING_GPIO_INTERRUPT_FAB_CR);
 #endif  /* MPFS_HAL_HW_CONFIG */
         /*
          * Initialise NWC
@@ -193,6 +195,7 @@ int main_first_hart(HLS_DATA* hls) {
          */
 #ifdef  MPFS_HAL_HW_CONFIG
         (void)mss_nwc_init();
+        (void)mss_nwc_init_ddr();
 
         /* main hart init's the PLIC */
         PLIC_init_on_reset();
@@ -205,6 +208,8 @@ int main_first_hart(HLS_DATA* hls) {
         (void)mss_config_clk_rst(MSS_PERIPH_FIC1, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
         (void)mss_config_clk_rst(MSS_PERIPH_FIC2, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
         (void)mss_config_clk_rst(MSS_PERIPH_FIC3, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
+        /* enable the fabric */
+        mss_enable_fabric();
 
 #endif /* MPFS_HAL_HW_CONFIG */
         (void)main_other_hart(hls);

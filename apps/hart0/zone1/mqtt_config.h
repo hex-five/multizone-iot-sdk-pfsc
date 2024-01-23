@@ -25,7 +25,7 @@
 
 #define MQTT_NO_LOCAL   1   /* ignore broker echo - mqtt v1.3.3 */
 
-#define MQTT_REL_TOPIC "hex-five/iot-sdk-pfsc/v2.2.8/+"
+#define MQTT_REL_TOPIC "hex-five/iot-sdk-pfsc/v2.2.9/+"
 #define MQTT_REL_FILES "zone1.bin", "zone2.bin", "zone3.bin", "zone4.bin",
 //                     "hart1.bin", "hart2.bin", "hart3.bin", "hart4.bin",
 

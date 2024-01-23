@@ -1,17 +1,17 @@
 diff --git a/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.c b/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.c
-index c5b830e..0613b5f 100644
+index 6313c7f..ac89ffa 100644
 --- a/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.c
 +++ b/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.c
-@@ -5,6 +5,8 @@
-  *
-  * PolarFire SoC 10/100/1000 Mbps Ethernet MAC bare metal software driver implementation.
+@@ -8,6 +8,8 @@
+  * @brief PolarFire SoC Microprocessor Subsystem (MSS) 10/100/1000 Mbps Ethernet
+  * MAC bare metal software driver implementation.
   *
 + * Modifications copyright (C) 2021 Hex Five Security, Inc.
 + *
   */
+ 
  #include <stdint.h>
- #include <stdbool.h>
-@@ -13,19 +15,19 @@
+@@ -17,7 +19,7 @@
  #include "mpfs_hal/mss_hal.h"
  
  #if defined(MSS_MAC_PHY_HW_RESET) || defined(MSS_MAC_PHY_HW_SRESET)
@@ -19,25 +19,8 @@ index c5b830e..0613b5f 100644
 +#include "drivers/mss/mss_gpio/mss_gpio.h"
  #endif
  
--#include "drivers/mss_ethernet_mac/mss_ethernet_registers.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_regs.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_sw_cfg.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_regs.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_sw_cfg.h"
- 
- #if defined(USING_FREERTOS)
- #include "FreeRTOS.h"
- #endif
- 
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac.h"
--#include "drivers/mss_ethernet_mac/phy.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h"
-+#include "drivers/mss/mss_ethernet_mac/phy.h"
- #include "hal/hal.h"
- 
- #ifdef __cplusplus
-@@ -186,6 +188,7 @@ MSS_MAC_init
+ #include "drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h"
+@@ -190,6 +192,7 @@ MSS_MAC_init
      ASSERT((this_mac == &g_mac0) || (this_mac == &g_mac1) || (this_mac == &g_emac0) || (this_mac == &g_emac1));
      instances_init(this_mac, cfg);
  
@@ -45,7 +28,7 @@ index c5b830e..0613b5f 100644
      /*
       * Always reset GEM if the pMAC is selected for init but not if eMAC
       * The pMAC should always be initialised first followed by the eMAC so this
-@@ -226,6 +229,7 @@ MSS_MAC_init
+@@ -230,6 +233,7 @@ MSS_MAC_init
          /* Take MAC out of reset. */
          SYSREG->SOFT_RESET_CR &= (uint32_t)~4U;
      }
@@ -53,55 +36,39 @@ index c5b830e..0613b5f 100644
  
      /*
       * Disable all queues.
-@@ -5522,14 +5526,14 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
+@@ -5573,7 +5577,7 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
              this_mac->mac_base    = (MAC_TypeDef  *)MSS_MAC0_BASE;
              this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC0_BASE;
  
 -            SYSREG->APBBUS_CR &= ~MSS_MAC_GEM0_ABP_BIT;
-+/*            SYSREG->APBBUS_CR &= ~MSS_MAC_GEM0_ABP_BIT; */ /* Hex Five */
++/*          SYSREG->APBBUS_CR &= ~MSS_MAC_GEM0_ABP_BIT; */ /* Hex Five */
          }
          else
          {
-             this_mac->mac_base    = (MAC_TypeDef  *)MSS_MAC0_BASE_HI;
-             this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC0_BASE_HI;
- 
--            SYSREG->APBBUS_CR |= MSS_MAC_GEM0_ABP_BIT;
-+/*            SYSREG->APBBUS_CR |= MSS_MAC_GEM0_ABP_BIT;  */ /* Hex Five */
-         }
- 
-         if(0U != this_mac->use_local_ints)
-@@ -5568,14 +5572,14 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
+@@ -5619,7 +5623,7 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
              this_mac->mac_base    = (MAC_TypeDef  *)MSS_MAC1_BASE;
              this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC1_BASE;
  
 -            SYSREG->APBBUS_CR &= ~MSS_MAC_GEM1_ABP_BIT;
-+/*            SYSREG->APBBUS_CR &= ~MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
++/*          SYSREG->APBBUS_CR &= ~MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
          }
          else
          {
-             this_mac->mac_base    = (MAC_TypeDef  *)MSS_MAC1_BASE_HI;
-             this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC1_BASE_HI;
- 
--            SYSREG->APBBUS_CR |= MSS_MAC_GEM1_ABP_BIT;
-+/*            SYSREG->APBBUS_CR |= MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
-         }
- 
-         if(0U != this_mac->use_local_ints)
-@@ -5620,7 +5624,7 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
+@@ -5671,7 +5675,7 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
              this_mac->mac_base    = (MAC_TypeDef  *)MSS_MAC0_BASE;
              this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC0_BASE;
  
 -            SYSREG->APBBUS_CR &= ~MSS_MAC_GEM0_ABP_BIT;
-+/*            SYSREG->APBBUS_CR &= ~MSS_MAC_GEM0_ABP_BIT; */ /* Hex Five */
++/*          SYSREG->APBBUS_CR &= ~MSS_MAC_GEM0_ABP_BIT; */ /* Hex Five */
          }
          else
          {
-@@ -5659,14 +5663,14 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
+@@ -5710,14 +5714,14 @@ static void instances_init(mss_mac_instance_t *this_mac, mss_mac_cfg_t *cfg)
                  this_mac->mac_base    = (MAC_TypeDef  *)MSS_MAC1_BASE;
                  this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC1_BASE;
  
 -                SYSREG->APBBUS_CR &= ~MSS_MAC_GEM1_ABP_BIT;
-+ /*               SYSREG->APBBUS_CR &= ~MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
++/*              SYSREG->APBBUS_CR &= ~MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
              }
              else
              {
@@ -109,24 +76,15 @@ index c5b830e..0613b5f 100644
                  this_mac->emac_base   = (eMAC_TypeDef *)MSS_EMAC1_BASE_HI;
  
 -                SYSREG->APBBUS_CR |= MSS_MAC_GEM1_ABP_BIT;
-+ /*               SYSREG->APBBUS_CR |= MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
++/*              SYSREG->APBBUS_CR |= MSS_MAC_GEM1_ABP_BIT; */ /* Hex Five */
              }
  
              if(0U != this_mac->use_local_ints)
 diff --git a/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h b/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h
-index a11bb22..9f0b765 100644
+index 920c3dd..b73b277 100644
 --- a/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h
 +++ b/drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h
-@@ -261,7 +261,7 @@
- #define MSS_ETHERNET_MAC_H_
- 
- #include <stdbool.h>
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_types.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_types.h"
- 
- #ifdef __cplusplus
- extern "C" {
-@@ -337,7 +337,7 @@ extern "C" {
+@@ -321,7 +321,7 @@ extern "C" {
  #if (MSS_MAC_QUEUE_COUNT >= 2)
  #define MSS_MAC_MAX_PACKET_SIZE                 MSS_MAC_JUMBO_MAX
  #else
@@ -136,10 +94,10 @@ index a11bb22..9f0b765 100644
  #endif
  
 diff --git a/drivers/mss/mss_ethernet_mac/mss_ethernet_mac_types.h b/drivers/mss/mss_ethernet_mac/mss_ethernet_mac_types.h
-index 91e7347..2af30bf 100644
+index 48ca711..dbd858e 100644
 --- a/drivers/mss/mss_ethernet_mac/mss_ethernet_mac_types.h
 +++ b/drivers/mss/mss_ethernet_mac/mss_ethernet_mac_types.h
-@@ -14,7 +14,7 @@
+@@ -17,7 +17,7 @@
  #include <stdint.h>
  
  #if defined(MSS_MAC_PHY_HW_RESET) || defined(MSS_MAC_PHY_HW_SRESET)
@@ -149,10 +107,10 @@ index 91e7347..2af30bf 100644
  
  #ifdef __cplusplus
 diff --git a/drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h b/drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h
-index 8dd193b..8f38cdc 100644
+index 3fa7c59..e50cfe1 100644
 --- a/drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h
 +++ b/drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h
-@@ -22,7 +22,7 @@ extern "C" {
+@@ -25,7 +25,7 @@ extern "C" {
  /*----------------------------------------------------------------------------*/
  /*----------------------------------- MAC -----------------------------------*/
  /*----------------------------------------------------------------------------*/
@@ -161,53 +119,11 @@ index 8dd193b..8f38cdc 100644
  #define __O  volatile
  #define __IO volatile
  
-diff --git a/drivers/mss/mss_ethernet_mac/null_phy.c b/drivers/mss/mss_ethernet_mac/null_phy.c
-index bd97c5e..fa89ad1 100644
---- a/drivers/mss/mss_ethernet_mac/null_phy.c
-+++ b/drivers/mss/mss_ethernet_mac/null_phy.c
-@@ -15,11 +15,11 @@
-  */
- #include "mpfs_hal/mss_hal.h"
- 
--#include "drivers/mss_ethernet_mac/mss_ethernet_registers.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_regs.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_sw_cfg.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac.h"
--#include "drivers/mss_ethernet_mac/phy.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_regs.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_sw_cfg.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h"
-+#include "drivers/mss/mss_ethernet_mac/phy.h"
- 
- #ifdef __cplusplus
- extern "C" {
-diff --git a/drivers/mss/mss_ethernet_mac/vsc8662_phy.c b/drivers/mss/mss_ethernet_mac/vsc8662_phy.c
-index d528995..be544f4 100644
---- a/drivers/mss/mss_ethernet_mac/vsc8662_phy.c
-+++ b/drivers/mss/mss_ethernet_mac/vsc8662_phy.c
-@@ -12,11 +12,11 @@
- #include "mpfs_hal/mss_hal.h"
- #include "hal/hal.h"
- 
--#include "drivers/mss_ethernet_mac/mss_ethernet_registers.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_regs.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac_sw_cfg.h"
--#include "drivers/mss_ethernet_mac/mss_ethernet_mac.h"
--#include "drivers/mss_ethernet_mac/phy.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_registers.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_regs.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac_sw_cfg.h"
-+#include "drivers/mss/mss_ethernet_mac/mss_ethernet_mac.h"
-+#include "drivers/mss/mss_ethernet_mac/phy.h"
- 
- #ifdef __cplusplus
- extern "C" {
 diff --git a/drivers/mss/mss_mmc/mss_mmc.c b/drivers/mss/mss_mmc/mss_mmc.c
-index 38862b7..cb31dda 100644
+index fcb56fb..c9682c7 100644
 --- a/drivers/mss/mss_mmc/mss_mmc.c
 +++ b/drivers/mss/mss_mmc/mss_mmc.c
-@@ -308,7 +308,7 @@ MSS_MMC_init
+@@ -315,7 +315,7 @@ MSS_MMC_init
      uint8_t hw_hs_timing;
  
      /* Reset MMC */
@@ -217,36 +133,55 @@ index 38862b7..cb31dda 100644
      PLIC_DisableIRQ(MMC_main_PLIC);
  
 diff --git a/drivers/mss/mss_mmc/mss_mmc_regs.h b/drivers/mss/mss_mmc/mss_mmc_regs.h
-index 3d3113e..518e3a4 100644
+index 686eb86..d5a311d 100644
 --- a/drivers/mss/mss_mmc/mss_mmc_regs.h
 +++ b/drivers/mss/mss_mmc/mss_mmc_regs.h
-@@ -335,7 +335,7 @@ typedef struct {
+@@ -337,14 +337,6 @@ typedef struct {
+ #define SRS12_ERROR_INTERRUPT       0x00008000u
  /* Command Queuing - interrupt */
  #define SRS12_CMD_QUEUING_INT       0x00004000u
- /* Re-Tuning Event */
+-/* Re-Tuning Event */
 -/*#define SRS12_RETUNING_EVENT        0x00001000u
-+/*#define SRS12_RETUNING_EVENT        0x00001000u*/
- /* Interrupt on line C */
- #define SRS12_INTERRUPT_ON_LINE_C   0x00000800u
- /* Interrupt on line B */
+-/* Interrupt on line C */
+-#define SRS12_INTERRUPT_ON_LINE_C   0x00000800u
+-/* Interrupt on line B */
+-#define SRS12_INTERRUPT_ON_LINE_B   0x00000400u
+-/* Interrupt on line A */
+-#define SRS12_INTERRUPT_ON_LINE_A   0x00000200u*/
+ /* Card interrupt */
+ #define SRS12_CARD_INTERRUPT        0x00000100u
+ /* Card removal */
+diff --git a/drivers/mss/mss_sys_services/mss_sys_services.c b/drivers/mss/mss_sys_services/mss_sys_services.c
+index bc91230..78f864c 100644
+--- a/drivers/mss/mss_sys_services/mss_sys_services.c
++++ b/drivers/mss/mss_sys_services/mss_sys_services.c
+@@ -47,7 +47,7 @@ static uint16_t g_int_service_response_size;
+ static uint16_t g_int_service_response_offset;
+ static uint16_t g_mb_offset;
+ 
+-volatile static uint8_t g_message_interrupt_counter = 0u;
++static volatile uint8_t g_message_interrupt_counter = 0u;
+ 
+ /*******************************************************************************
+  * Callback handler function declaration
 diff --git a/drivers/mss/mss_usb/mss_usb_host.c b/drivers/mss/mss_usb/mss_usb_host.c
-index d8e8781..03c20b3 100644
+index 81ac220..e1e4c85 100644
 --- a/drivers/mss/mss_usb/mss_usb_host.c
 +++ b/drivers/mss/mss_usb/mss_usb_host.c
 @@ -1,3 +1,5 @@
 +/* Modifications copyright (C) 2021 Hex Five Security, Inc. */
 +
  /*******************************************************************************
-  * Copyright 2019-2020 Microchip FPGA Embedded Systems Solutions.
+  * Copyright 2019 Microchip FPGA Embedded Systems Solutions.
   *
-@@ -12,6 +14,7 @@
+@@ -14,6 +16,7 @@
   *
   */
  
 +#include <string.h>
- 
  #include "mpfs_hal/mss_hal.h"
  #include "mss_usb_common_cif.h"
+ #include "mss_usb_common_reg_io.h"
 @@ -863,7 +866,7 @@ MSS_USBH_resume
      void
  )
@@ -269,23 +204,7 @@ index d8e8781..03c20b3 100644
              }
              else if (ENUM_ERROR == enum_st)
              {
-@@ -1082,6 +1091,7 @@ mss_usbh_enum_fsm
-         break;
- 
-         case ENUM_GET_DEF_DEV_DESC:
-+
-             MSS_USBH_construct_get_descr_command(command_buf,
-                                                  USB_STD_REQ_DATA_DIR_IN,
-                                                  USB_STANDARD_REQUEST,
-@@ -1097,6 +1107,7 @@ mss_usbh_enum_fsm
-                                       (uint8_t*)&g_tdev_desc[tdev_idx].dev_desc,
-                                       USB_STD_REQ_DATA_DIR_IN,
-                                       USB_SETUP_PKT_LEN);
-+
-         break;
- 
-         case ENUM_WAIT_GET_DEF_DEV_DESC:
-@@ -1325,13 +1336,13 @@ mss_usbh_enum_fsm
+@@ -1325,13 +1334,13 @@ mss_usbh_enum_fsm
          case ENUM_CHECK_TDEV_CLASS_SUPPORT:
              cd_idx =  host_enum_check_class_support(TDEV_R);
  
@@ -302,27 +221,18 @@ index d8e8781..03c20b3 100644
                  g_rcd[cd_idx].alloc_state = 1u;
                  g_tdev[TDEV_R].class_handle = g_rcd[cd_idx].class_handle;
 diff --git a/mpfs_hal/common/mss_mtrap.c b/mpfs_hal/common/mss_mtrap.c
-index 2226d7b..c50b160 100644
+index bd391aa..f9dea1c 100644
 --- a/mpfs_hal/common/mss_mtrap.c
 +++ b/mpfs_hal/common/mss_mtrap.c
-@@ -5,6 +5,7 @@
-  *
-  * MPFS HAL Embedded Software
+@@ -7,6 +7,7 @@
+  * @author Microchip FPGA Embedded Systems Solutions
+  * @brief trap functions
   *
 + * Modifications copyright (C) 2021 Hex Five Security, Inc.
   */
  
- /***************************************************************************
-@@ -20,8 +21,6 @@
- extern "C" {
- #endif
- 
--
--
- void handle_local_interrupt(uint8_t interrupt_no);
- void handle_m_soft_interrupt(void);
- void handle_m_timer_interrupt(void);
-@@ -32,6 +31,12 @@ void pmp_trap(uintptr_t * regs, uintptr_t mcause, uintptr_t mepc);
+ #include "mpfs_hal/mss_hal.h"
+@@ -25,6 +26,13 @@ void pmp_trap(uintptr_t * regs, uintptr_t mcause, uintptr_t mepc);
  void trap_from_machine_mode(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc);
  void bad_trap(uintptr_t* regs, uintptr_t dummy, uintptr_t mepc);
  
@@ -332,15 +242,14 @@ index 2226d7b..c50b160 100644
 +void handle_m_trap_h3(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc); /* Hex Five mod */
 +void handle_m_trap_h4(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc); /* Hex Five mod */
 +void handle_m_trap(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc); /* Hex Five mod */
- 
++
  void bad_trap(uintptr_t* regs, uintptr_t dummy, uintptr_t mepc)
  {
-@@ -748,7 +753,38 @@ void trap_from_machine_mode(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc)
+     (void)regs;
+@@ -681,6 +689,36 @@ void trap_from_machine_mode(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc)
      }
      else
      {
--        uint32_t i = 0U;
-+
 +        switch(read_csr(mhartid)) {
 +        case 0U: handle_m_trap_h0(regs, mcause, mepc); break;
 +        case 1U: handle_m_trap_h1(regs, mcause, mepc); break;
@@ -371,32 +280,33 @@ index 2226d7b..c50b160 100644
 +
 +void handle_m_trap(uintptr_t * regs, uintptr_t mcause, uintptr_t mepc) /* Hex Five mod */
 +{
-+    uint32_t i = 0U;
-         while(1)
+         uint32_t i = 0U;
+         while(1U)
          {
-             /* wait for watchdog */
-@@ -772,9 +808,8 @@ void trap_from_machine_mode(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc)
+@@ -705,10 +743,10 @@ void trap_from_machine_mode(uintptr_t * regs, uintptr_t dummy, uintptr_t mepc)
              case CAUSE_STORE_ACCESS:
                  break;
              default:
 -                bad_trap(regs, dummy, mepc);
-+            bad_trap(regs, mcause, mepc);
++                bad_trap(regs, mcause, mepc);
                  break;
--        }
-     }
+         }
+-    }
++
  }
  
+ #ifdef __cplusplus
 diff --git a/mpfs_hal/common/mss_plic.h b/mpfs_hal/common/mss_plic.h
-index 16c1602..3b5a409 100644
+index ec68933..1ac0cbe 100644
 --- a/mpfs_hal/common/mss_plic.h
 +++ b/mpfs_hal/common/mss_plic.h
 @@ -1,3 +1,5 @@
 +/* Modifications copyright (C) 2021 Hex Five Security, Inc. */
 +
  /*******************************************************************************
-  * Copyright 2019-2021 Microchip FPGA Embedded Systems Solutions.
+  * Copyright 2019 Microchip FPGA Embedded Systems Solutions.
   *
-@@ -713,10 +715,10 @@ extern const unsigned long plic_hart_lookup[5U];
+@@ -551,10 +553,10 @@ extern const unsigned long plic_hart_lookup[5U];
  
  /*-----------------Hart Mode Enables--------------------*/
  
@@ -409,7 +319,7 @@ index 16c1602..3b5a409 100644
  
      /* Disable all interrupts for the current hart. */
      switch(hart_id)
-@@ -785,7 +787,7 @@ static inline void PLIC_init(void)
+@@ -623,7 +625,7 @@ static inline void PLIC_init(void)
      }
  
      /* Enable machine external interrupts. */

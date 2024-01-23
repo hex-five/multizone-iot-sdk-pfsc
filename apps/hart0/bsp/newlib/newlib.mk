@@ -12,7 +12,7 @@ ASM_OBJS = $(abspath $(ASM_SRCS:.S=.o))
 C_OBJS   = $(abspath $(C_SRCS:.c=.o))
 
 CFLAGS += -march=rv64imac -mabi=lp64
-CFLAGS += -mcmodel=medany -msmall-data-limit=8
+CFLAGS += -mcmodel=medany -msmall-data-limit=16
 CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -Wall -Wextra -Wstrict-prototypes -Wbad-function-cast
 CFLAGS += -Wno-maybe-uninitialized -Wno-parentheses -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-result # -Wno-array-bounds

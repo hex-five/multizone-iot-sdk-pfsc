@@ -29,6 +29,7 @@ C_SRCS  += $(FATFS_SRC_DIR)/ffunicode.c
 ASM_SRCS+= $(PLATFORM_DIR)/mpfs_hal/startup_gcc/mss_utils.S
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/system_startup.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/newlib_stubs.c
+C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_beu.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_clint.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_irq_handler_stubs.c
 C_SRCS  += $(PLATFORM_DIR)/mpfs_hal/common/mss_l2_cache.c
@@ -60,7 +61,7 @@ CFLAGS += -Wno-unused-local-typedefs -Wno-parentheses -Wno-unused-parameter -Wno
 ifeq ($(BOOT_MODE),0)
     CFLAGS += -Og -g3
 else ifeq ($(BOOT_MODE),1)
-    CFLAGS += -Os -flto -msave-restore
+    CFLAGS += -Os -mtune=size -flto -msave-restore
 endif
 
 LDFLAGS := -T ../bsp/memory.ld -T $(LINKER_SCRIPT)

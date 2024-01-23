@@ -21,6 +21,7 @@ INCLUDES += -I $(PLATFORM_DIR)/platform_config_reference
 INCLUDES += -I $(MULTIZONE_DIR)
 
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/startup_gcc/newlib_stubs.c
+C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_beu.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_clint.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_irq_handler_stubs.c
 C_SRCS += $(PLATFORM_DIR)/mpfs_hal/common/mss_mtrap.c

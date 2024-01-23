@@ -4,3 +4,9 @@
 [submodule "ext/pfsc-platform"]
 	path = ext/pfsc-platform
 	url = https://github.com/polarfire-soc/platform.git
+[submodule "ext/lwip"]
+	path = ext/lwip
+	url = https://github.com/lwip-tcpip/lwip.git
+[submodule "ext/mbedtls"]
+	path = ext/mbedtls
+	url = https://github.com/ARMmbed/mbedtls.git

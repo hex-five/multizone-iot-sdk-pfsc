@@ -4,10 +4,10 @@
 /* lim_origin  = 0x08000000; lim_len  = 512K;     */
 /* ddr_origin  = 0x80000000; ddr_len  = 768M;     */
 
-boot_prog  = 0x08002000; boot_prog_len  = 52K;
+boot_prog  = 0x08002000; boot_prog_len  = 56K;
 boot_data  = 0x0804C000; boot_data_len  = 28K;
 
-zone1_prog = 0x0800F000; zone1_prog_len = 196K;
+zone1_prog = 0x08010000; zone1_prog_len = 192K;
 zone1_data = 0x0804C000; zone1_data_len = 160K; 
 
 zone2_prog = 0x08040000; zone2_prog_len = 16K;
